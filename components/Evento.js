@@ -33,9 +33,10 @@ const opcoesCamera = {
 };
 
 
-const styles = StyleSheet.create({
+const css = StyleSheet.create({
     card: {flex: 0, marginTop: 0, borderRadius: 0},
-    foto: {height: 130}
+    foto: {height: 130},
+    container: {backgroundColor: '#fff'}
 });
 
 
@@ -49,9 +50,8 @@ export default class Evento extends Component {
             modeloSelecionado: null,
             data: new Date(),
             hora: new Date(),
-            antes: null,
-            depois: null,
             salvando: false,
+            fotos: []
         }
 
     }
@@ -68,7 +68,7 @@ export default class Evento extends Component {
 
     render() {
         return (
-            <Container>
+            <Container style={css.container}>
                 <Header style={cssg.header}>
                     <Button transparent onPress={()=> this.voltar()}>
                         <Icon name='md-arrow-back' />
@@ -76,7 +76,7 @@ export default class Evento extends Component {
                     <Title>{this.props.titulo}</Title>
                 </Header>
 
-                <Content >
+                <Content style={cssg.content} >
                     {this.exibirServicos()}
                 </Content>
             </Container>
@@ -87,94 +87,89 @@ export default class Evento extends Component {
     exibirServicos(){
         if(this.props.servicos.length > 0 && this.state.selecionado != null){
             return (
-                    <Card style={styles.card}>
-                        <CardItem>
-                            <Picker
-                                mode="dropdown"
-                                selectedValue={this.state.selecionado}
-                                onValueChange={(item)=>this.setState({selecionado: item})}>
-                                {this.props.servicos.map((item, k) => <Item key={k} label={item.name} value={item} />)}
-                           </Picker>
-                        </CardItem>
-                        <CardItem>
-                            <Picker
-                                mode="dropdown"
-                                selectedValue={this.state.modeloSelecionado}
-                                onValueChange={(item)=>this.setState({modeloSelecionado: item})}>
-                                {this.state.selecionado.model.map((item, k) => <Item key={k} label={item.name} value={item} />)}
-                           </Picker>
-                        </CardItem>
-                        <CardItem>
-                            <Grid>
-                            <Row>
-                                <Col>
-                                    <Text>Data</Text>
-                                </Col>
-                                <Col alignItems="center">
-                                    <DatePicker
-                                        date={this.state.data}
-                                        mode="date"
-                                        showIcon={false}
-                                        format="DD/MM/YYYY"
-                                        confirmBtnText="Ok"
-                                        cancelBtnText="Cancelar"
-                                        customStyles={{
-                                          dateInput: {
-                                            borderWidth: 0
-                                          }
-                                        }}
-                                        onDateChange={(data) => {this.setState({data: data})}}
-                                      />
-                                </Col>
-                                </Row>
-                            </Grid>
-                        </CardItem>
-                        <CardItem>
-                               <Grid>
-                               <Row>
-                                   <Col><Text>Hora</Text></Col>
-                                   <Col alignItems="center">
-                                    <DatePicker
-                                        date={this.state.hora}
-                                        mode="time"
-                                        showIcon={false}
-                                        format="HH:mm"
-                                        confirmBtnText="Ok"
-                                        cancelBtnText="Cancelar"
-                                        customStyles={{
-                                          dateInput: {
-                                            borderWidth: 0
-                                          }
-                                        }}
-                                        onDateChange={(hora) => {this.setState({hora: hora})}}
-                                      />
-                                   </Col>
-                                   </Row>
-                               </Grid>
-                        </CardItem>
-                        <CardItem>
-                              <Grid>
-                              <Row style={styles.foto}>
-                                  <Col><Button danger block onPress={() => this.obterFoto('antes')}> Antes </Button></Col>
-                                  <Col alignItems="center">{this.exibirFoto('antes')}</Col>
-                              </Row>
-                              </Grid>
-                          </CardItem>
-                          <CardItem>
-                              <Grid>
-                              <Row style={styles.foto}>
-                                  <Col><Button danger block onPress={() => this.obterFoto('depois')}> Depois </Button></Col>
-                                  <Col alignItems="center">{this.exibirFoto('depois')}</Col>
-                              </Row>
-                              </Grid>
-                        </CardItem>
-                          <CardItem>
-                            {this.exibirBotao()}
-                        </CardItem>
-                    </Card>
+                    <Grid>
+                        <Row style={cssg.formRow}  >
+                            <Col>
+                                <Picker
+                                    mode="dropdown"
+                                    selectedValue={this.state.selecionado}
+                                    onValueChange={(item)=>this.setState({selecionado: item})}>
+                                    {this.props.servicos.map((item, k) => <Item key={k} label={item.name} value={item} />)}
+                               </Picker>
+                            </Col>
+                        </Row>
+                        <Row style={cssg.formRow}  >
+                            <Col>
+                                <Picker
+                                    mode="dropdown"
+                                    selectedValue={this.state.modeloSelecionado}
+                                    onValueChange={(item)=>this.setState({modeloSelecionado: item})}>
+                                    {this.state.selecionado.model.map((item, k) => <Item key={k} label={item.name} value={item} />)}
+                               </Picker>
+                            </Col>
+                        </Row>
+                        <Row style={cssg.formRow}  >
+                            <Col>
+                                <Text>Data</Text>
+                            </Col>
+                            <Col alignItems="center">
+                                <DatePicker
+                                    date={this.state.data}
+                                    mode="date"
+                                    showIcon={false}
+                                    format="DD/MM/YYYY"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                      dateInput: {
+                                        borderWidth: 0
+                                      }
+                                    }}
+                                    onDateChange={(data) => {this.setState({data: data})}}
+                                  />
+                            </Col>
+                        </Row>
+                        <Row style={cssg.formRow}  >
+                              <Col><Text>Hora</Text></Col>
+                               <Col alignItems="center">
+                                <DatePicker
+                                    date={this.state.hora}
+                                    mode="time"
+                                    showIcon={false}
+                                    format="HH:mm"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                      dateInput: {
+                                        borderWidth: 0
+                                      }
+                                    }}
+                                    onDateChange={(hora) => {this.setState({hora: hora})}}
+                                  />
+                               </Col>
+                        </Row>
+                        {this.exibirFormFotos()}
+                          <Row style={cssg.formRow}  >
+                            <Col>{this.exibirBotao()}</Col>
+                            </Row>
+                    </Grid>
             )
         }else{
             return <Spinner style={{alignSelf: 'center'}} color="#ff9900" />
+        }
+    }
+
+
+    exibirFormFotos(){
+        if(this.state.modeloSelecionado){
+            return (
+                this.state.modeloSelecionado.photos.map((item, k) =>
+                  <Row key={k} style={[css.foto, cssg.formRow]}>
+                      <Col><Button danger block onPress={() => this.obterFoto(k)}>{item.name}</Button></Col>
+                      <Col alignItems="center">{this.exibirFoto(k)}</Col>
+                  </Row>
+                )
+            )
         }
     }
 
@@ -194,8 +189,7 @@ export default class Evento extends Component {
             servico: state.selecionado,
             data: state.data,
             hora: state.hora,
-            antes: state.antes,
-            depois: state.depois
+            fotos: state.fotos,
         }
 
         this.setState({salvando: true})
@@ -207,16 +201,16 @@ export default class Evento extends Component {
     }
 
 
-    exibirFoto(foto){
-        if(this.state[foto] != null){
-            return (<Thumbnail  square size={120} source={this.state[foto]} />);
+    exibirFoto(k){
+        if(this.state.fotos[k] != null){
+            return (<Thumbnail  square size={120} source={this.state.fotos[k]} />);
         }else{
             return <Text>Selecione uma Foto</Text>;
         }
     }
 
 
-    obterFoto(tipo){
+    obterFoto(k){
         ImagePicker.showImagePicker(opcoesCamera, (response) => {
             console.log('Response = ', response);
 
@@ -228,15 +222,9 @@ export default class Evento extends Component {
                 console.log('User tapped custom button: ', response.customButton);
             }else {
                 const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-                if(tipo == 'antes'){
-                    this.setState({
-                      antes: source
-                    });
-                }else{
-                    this.setState({
-                      depois: source
-                    });
-                }
+                let fotos = [...this.state.fotos];
+                fotos[k] = source;
+                this.setState({fotos: fotos});
               }
         });
     }
