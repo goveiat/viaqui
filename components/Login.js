@@ -23,7 +23,8 @@ export default class Login extends Component {
           senha: '',
           erro: false,
           enviando: false,
-          dadosFb: null
+          dadosFb: null,
+          imgCompleta: false
         }
     }
 
@@ -37,7 +38,13 @@ export default class Login extends Component {
                 <Content style={cssg.content}>
                     <Card style={cssg.card}>
                         <CardItem >
-                            <Image  style={css.logo} source={{uri: this.props.logo}} />
+                            <Image
+                                style={[css.logo, {paddingTop: 60}]}
+                                source={{uri: this.props.logo}}
+                                onLoad={(e) => this.setState({imgCompleta: true})}
+                              >
+                              {this.loadingImg()}
+                            </Image>
                         </CardItem>
 
                         <CardItem body>
@@ -57,6 +64,15 @@ export default class Login extends Component {
                 </Content>
             </Container>
         );
+    }
+
+
+    loadingImg(){
+      if(!this.state.imgCompleta){
+        return (<Spinner style={{alignSelf: 'center'}} color="red" />)
+      }else{
+        return (<View></View>)
+      }
     }
 
 
