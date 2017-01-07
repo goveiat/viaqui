@@ -15,9 +15,10 @@ import {
     Row,
     CardItem,
     Spinner,
+    Text,
     Icon } from 'native-base';
 import Utils from './Utils';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
 
@@ -56,11 +57,11 @@ export default class Clientes extends Component {
         return (
             <Container>
                 <Header style={cssg.header}>
-                    <Title>{this.props.aplicativo.name}</Title>
+                    <Title>Clientes</Title>
                 </Header>
 
-                <Content style={cssg.content}>
-                <Thumbnail size={120} style={{alignSelf: 'center', marginBottom: 10}} source={{uri: this.props.aplicativo.logo}} />
+                <Content >
+                <Thumbnail size={120} style={{alignSelf: 'center', marginBottom: 10, marginTop: 10}} source={{uri: this.props.aplicativo.logo}} />
                         {this.exibir()}
                 </Content>
 
@@ -116,7 +117,7 @@ export default class Clientes extends Component {
 
     exibeBusca(){
         return(
-            <Card style={css.card}>
+            <Card style={[css.card, {margin: 10}]}>
                 <CardItem>
                     <InputGroup borderType='underline' iconRight>
                         <Input placeholder="Pesquisar" onChangeText={this.filtrar.bind(this)} />
@@ -144,9 +145,9 @@ export default class Clientes extends Component {
             case 'Evento':
               this.props.navigator.push({
                 appRoute: view,
-                cliente: item.name,
-                idCliente: item.id,
-                servicos: this.state.servicos
+                cliente: item,
+                servicos: this.state.servicos,
+                aplicativo: this.props.aplicativo
               })
             break;
         }

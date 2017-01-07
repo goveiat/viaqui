@@ -4,6 +4,7 @@ import Clientes from './Clientes';
 import Evento from './Evento';
 import PalavraChave from './PalavraChave';
 import Login from './Login';
+import Foto from './Foto';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
 
@@ -58,12 +59,19 @@ export default class App extends Component {
           return (<Login navigator={navigator} {...route.dados} />);
         case 'Clientes':
           return (<Clientes navigator={navigator} {...route.dados}/>);
+        case 'Foto':
+          return (<Foto
+            navigator={navigator}
+                servico={route.servico}
+                cliente={route.cliente}
+                aplicativo={route.aplicativo}
+            />);
         case 'Evento':
           return (<Evento
             navigator={navigator}
-            titulo={route.cliente}
+            cliente={route.cliente}
             servicos={route.servicos}
-            idCliente={route.idCliente} />);
+            aplicativo={route.aplicativo} />);
       }
 
     }

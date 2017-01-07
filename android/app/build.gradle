@@ -126,6 +126,7 @@ android {
 }
 
 dependencies {
+    compile project(':gl-react-native')
     compile project(':react-native-facebook-login')
     compile project(':react-native-splash-screen')
     compile project(':react-native-image-picker')

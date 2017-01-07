@@ -32,11 +32,13 @@ export default class PalavraChave extends Component {
 
     componentDidMount(){
       let self = this;
-
+      console.log('Inicio')
       self.getOpData()
       .then(op => {
+        console.log('OP')
           self.getAppData()
           .then(app => {
+            console.log('OP-APP')
             op.aplicativo = app;
             self.props.navigator.replace({appRoute: 'Clientes', dados: op})
           })
@@ -44,11 +46,12 @@ export default class PalavraChave extends Component {
           switch (err.name) {
               case 'NotFoundError':
               case 'ExpiredError':
-                    self.getAppData
+                    self.getAppData()
                     .then(app => {
+                        console.log('APP')
                         self.props.navigator.replace({appRoute: 'Login', dados: app})
                     }).catch(err => {
-                      console.log('iiiiii')
+                        console.log('PC')
                         switch (err.name) {
                             case 'NotFoundError':
                             case 'ExpiredError':

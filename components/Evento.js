@@ -12,31 +12,19 @@ import {
     Spinner,
     Input,
     Thumbnail,
+    Text,
     Icon } from 'native-base';
 
-import {Text, Navigator, Platform, TextInput, StyleSheet} from 'react-native';
+import {StyleSheet, View, Slider, Image} from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import ImagePicker from 'react-native-image-picker';
 import cssg from './GlobalStyle';
 const Item = Picker.Item;
 
-const opcoesCamera = {
-    title: 'Selecionar Foto',
-    cancelButtonTitle: 'Cancelar',
-    takePhotoButtonTitle: 'Nova Foto',
-    chooseFromLibraryButtonTitle: 'Foto da Galeria',
-    storageOptions: {
-        skipBackup: true,
-        path: 'images'
-    }
-};
 
 
 const css = StyleSheet.create({
-    card: {flex: 0, marginTop: 0, borderRadius: 0},
-    foto: {height: 130},
-    container: {backgroundColor: '#fff'}
+    lastRow: {borderBottomWidth: 0}
 });
 
 
@@ -47,11 +35,9 @@ export default class Evento extends Component {
 
         this.state = {
             selecionado: null,
-            modeloSelecionado: null,
             data: new Date(),
             hora: new Date(),
-            salvando: false,
-            fotos: []
+            fotos: [],
         }
 
     }
@@ -60,7 +46,6 @@ export default class Evento extends Component {
     componentDidMount(){
         this.setState({
             selecionado: this.props.servicos[0],
-            modeloSelecionado: this.props.servicos[0].model[0],
         })
     }
 
@@ -68,18 +53,39 @@ export default class Evento extends Component {
 
     render() {
         return (
-            <Container style={css.container}>
+            <Image style={cssg.cover} resizeMode='cover' source={require('../img/background.jpg')}>
+            <Container >
                 <Header style={cssg.header}>
                     <Button transparent onPress={()=> this.voltar()}>
                         <Icon name='md-arrow-back' />
                     </Button>
-                    <Title>{this.props.titulo}</Title>
+                    <Title>Serviço</Title>
+                    <Button transparent onPress={()=>{
+                        this.props.navigator.push({
+                            appRoute: 'Foto',
+                            servico: this.state.selecionado,
+                            cliente: this.props.cliente,
+                            aplicativo: this.props.aplicativo
+                          })
+                    }}>
+                        <Icon name='md-arrow-forward' />
+                    </Button>
                 </Header>
 
                 <Content style={cssg.content} >
-                    {this.exibirServicos()}
+                <Card style={{ flex: 0 }}>
+                    <CardItem style={{ alignItems: 'center' }}>
+                        <Thumbnail size={50} source={{uri: this.props.aplicativo.url + this.props.cliente.photo}} />
+                        <Text style={cssg.tituloCard}>Cliente {this.props.cliente.name}</Text>
+                    </CardItem>
+                    <CardItem>
+                        {this.exibirServicos()}
+                    </CardItem>
+                </Card>
+
                 </Content>
             </Container>
+            </Image>
         );
     }
 
@@ -95,16 +101,6 @@ export default class Evento extends Component {
                                     selectedValue={this.state.selecionado}
                                     onValueChange={(item)=>this.setState({selecionado: item})}>
                                     {this.props.servicos.map((item, k) => <Item key={k} label={item.name} value={item} />)}
-                               </Picker>
-                            </Col>
-                        </Row>
-                        <Row style={cssg.formRow}  >
-                            <Col>
-                                <Picker
-                                    mode="dropdown"
-                                    selectedValue={this.state.modeloSelecionado}
-                                    onValueChange={(item)=>this.setState({modeloSelecionado: item})}>
-                                    {this.state.selecionado.model.map((item, k) => <Item key={k} label={item.name} value={item} />)}
                                </Picker>
                             </Col>
                         </Row>
@@ -129,7 +125,7 @@ export default class Evento extends Component {
                                   />
                             </Col>
                         </Row>
-                        <Row style={cssg.formRow}  >
+                        <Row style={[cssg.formRowm, css.lastRow]}  >
                               <Col><Text>Hora</Text></Col>
                                <Col alignItems="center">
                                 <DatePicker
@@ -148,10 +144,6 @@ export default class Evento extends Component {
                                   />
                                </Col>
                         </Row>
-                        {this.exibirFormFotos()}
-                          <Row style={cssg.formRow}  >
-                            <Col>{this.exibirBotao()}</Col>
-                            </Row>
                     </Grid>
             )
         }else{
@@ -160,74 +152,10 @@ export default class Evento extends Component {
     }
 
 
-    exibirFormFotos(){
-        if(this.state.modeloSelecionado){
-            return (
-                this.state.modeloSelecionado.photos.map((item, k) =>
-                  <Row key={k} style={[css.foto, cssg.formRow]}>
-                      <Col><Button danger block onPress={() => this.obterFoto(k)}>{item.name}</Button></Col>
-                      <Col alignItems="center">{this.exibirFoto(k)}</Col>
-                  </Row>
-                )
-            )
-        }
-    }
-
-
-    exibirBotao(){
-        if(!this.state.salvando){
-            return <Button block onPress={() => this.salvar()}> Salvar </Button>
-        }else{
-            return <Button block disabled> Enviando... </Button>
-        }
-    }
-
-    salvar(){
-        let state = this.state;
-        let dados = {
-            cliente: this.props.idCliente,
-            servico: state.selecionado,
-            data: state.data,
-            hora: state.hora,
-            fotos: state.fotos,
-        }
-
-        this.setState({salvando: true})
-    }
-
-
     voltar(){
         this.props.navigator.pop();
     }
 
-
-    exibirFoto(k){
-        if(this.state.fotos[k] != null){
-            return (<Thumbnail  square size={120} source={this.state.fotos[k]} />);
-        }else{
-            return <Text>Selecione uma Foto</Text>;
-        }
-    }
-
-
-    obterFoto(k){
-        ImagePicker.showImagePicker(opcoesCamera, (response) => {
-            console.log('Response = ', response);
-
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            }else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            }else {
-                const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-                let fotos = [...this.state.fotos];
-                fotos[k] = source;
-                this.setState({fotos: fotos});
-              }
-        });
-    }
 
 }
 

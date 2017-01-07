@@ -94,12 +94,12 @@ export default class Login extends Component {
           switch(retorno.code){
             case 200:
             case "200":
-                  retorno.aplicativo = this.props;
                   global.storage.save({
                       key: 'operador',
                       id: 'autenticacao',
                       rawData: retorno,
                   });
+                  retorno.aplicativo = this.props;
                   self.props.navigator.replace({appRoute: 'Clientes', dados: retorno })
                 break;
             case 404:
