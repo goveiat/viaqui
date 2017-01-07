@@ -18,16 +18,23 @@ import {
     Text,
     Icon } from 'native-base';
 import Utils from './Utils';
+import MenuLateral from './MenuLateral';
 import {View, StyleSheet, Image} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
+import Drawer from 'react-native-drawer'
 
+
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3, backgroundColor: '#fff'},
+  main: {paddingLeft: 3},
+}
 
 
 const css = StyleSheet.create({
     avatar: {marginRight: 10},
     nome: {fontWeight: 'bold'},
-    card: {flex: 0, elevation: 3}
+    card: {flex: 0, elevation: 3},
 });
 
 
@@ -35,13 +42,14 @@ export default class Clientes extends Component {
 
     constructor(props){
         super(props);
-
+        this._drawer = null;
         this.state = {
             clientes: [],
             filtrados: [],
             enviando: false,
             erro: false,
-            servicos: []
+            servicos: [],
+            operador: null
         }
     }
 
@@ -49,24 +57,40 @@ export default class Clientes extends Component {
     componentDidMount(){
         SplashScreen.hide();
         this.buscaClientes();
-        this.buscaServicos()
+        this.buscaServicos();
+        this.buscaOperador()
     }
 
 
     render() {
         return (
+            <Drawer
+                elevation={4}
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<MenuLateral {...this.props} operador={this.state.operador} numClientes={this.state.clientes.length} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                  tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                  })}
+              >
             <Container>
                 <Header style={cssg.header}>
+                    <Button transparent onPress={()=>this._drawer.open()}><Icon name='md-menu' /></Button>
                     <Title>Clientes</Title>
                 </Header>
 
                 <Content >
-                <Thumbnail size={120} style={{alignSelf: 'center', marginBottom: 10, marginTop: 10}} source={{uri: this.props.aplicativo.logo}} />
                         {this.exibir()}
                 </Content>
 
 
             </Container>
+            </Drawer>
         );
     }
 
@@ -217,13 +241,43 @@ export default class Clientes extends Component {
     }
 
 
+    buscaOperador(){
+        let user = null;
+      let self = this;
+      let uri = this.props.aplicativo.url + this.props.path + this.props.auth;
+      Utils.get(uri)
+      .then((retorno) => {
+          switch(retorno.code){
+            case 200:
+            case "200":
+                user = retorno.user[self.props.id];
+                console.log(user)
+                self.setState({
+                    operador: user,
+                })
+                  global.storage.save({
+                      key: 'operador',
+                      id: 'dados',
+                      rawData: user,
+                  });
+                break;
+            default:
+                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+          }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+
+
 
 
 }
 
 Clientes.defaultProps = {
   path: '/component/api/app/users/users/raw/',
-  pathServices: '/component/api/app/events/services/raw/'
+  pathServices: '/component/api/app/events/services/raw/',
 }
 
 
