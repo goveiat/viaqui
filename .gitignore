@@ -28,12 +28,12 @@ build/
 .idea
 .gradle
 local.properties
+android/gradle.properties
 *.iml
 
 # node.js
 #
 node_modules/
-android/gradle.properties
 npm-debug.log
 
 # BUCK
