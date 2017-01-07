@@ -71,7 +71,8 @@ export default class App extends Component {
             navigator={navigator}
             cliente={route.cliente}
             servicos={route.servicos}
-            aplicativo={route.aplicativo} />);
+            aplicativo={route.aplicativo}
+            />);
       }
 
     }

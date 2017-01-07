@@ -48,6 +48,7 @@
 		82BA9D9499D345F89F469A7F /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE400BE65AE54867996938D0 /* libSplashScreen.a */; };
 		557FFB955E5840C18B6D7E57 /* libRCTFBLogin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68E8945C8BD4FBDBB92F5C6 /* libRCTFBLogin.a */; };
 		F39B13E211F249CAAEDEEEAE /* libRNGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7B9E0D259524982896CD9A2 /* libRNGL.a */; };
+		1032D0C544E8480C85B53B7A /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F1EF28A0E134733BD6C002D /* libimageCropPicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -197,6 +198,8 @@
 		E68E8945C8BD4FBDBB92F5C6 /* libRCTFBLogin.a */ = {isa = PBXFileReference; name = "libRCTFBLogin.a"; path = "libRCTFBLogin.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		485462909AFF43838ACBAF33 /* RNGL.xcodeproj */ = {isa = PBXFileReference; name = "RNGL.xcodeproj"; path = "../node_modules/gl-react-native/ios/RNGL.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		E7B9E0D259524982896CD9A2 /* libRNGL.a */ = {isa = PBXFileReference; name = "libRNGL.a"; path = "libRNGL.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		B6356225CA204AF08003DBDE /* ImageCropPicker.xcodeproj */ = {isa = PBXFileReference; name = "ImageCropPicker.xcodeproj"; path = "../node_modules/react-native-image-crop-picker/ios/ImageCropPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		0F1EF28A0E134733BD6C002D /* libimageCropPicker.a */ = {isa = PBXFileReference; name = "libimageCropPicker.a"; path = "libimageCropPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +231,7 @@
 				82BA9D9499D345F89F469A7F /* libSplashScreen.a in Frameworks */,
 				557FFB955E5840C18B6D7E57 /* libRCTFBLogin.a in Frameworks */,
 				F39B13E211F249CAAEDEEEAE /* libRNGL.a in Frameworks */,
+				1032D0C544E8480C85B53B7A /* libimageCropPicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +369,7 @@
 				43353C4C65FA4E50BB12BA98 /* SplashScreen.xcodeproj */,
 				776D21878B8B47729A189C63 /* RCTFBLogin.xcodeproj */,
 				485462909AFF43838ACBAF33 /* RNGL.xcodeproj */,
+				B6356225CA204AF08003DBDE /* ImageCropPicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -745,11 +750,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/viaqui.app/viaqui";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -766,11 +766,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/viaqui.app/viaqui";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Release;
@@ -853,6 +848,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/gl-react-native/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -898,6 +894,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-facebook-login/RCTFBLogin/**",
 					"$(SRCROOT)/../node_modules/gl-react-native/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

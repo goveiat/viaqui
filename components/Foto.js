@@ -16,13 +16,11 @@ import {
     Text,
     Icon } from 'native-base';
 
-import {StyleSheet, View, Slider, Image} from 'react-native';
+import {StyleSheet, View, Image, NativeModules} from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import ImagePicker from 'react-native-image-picker';
-import FitImage from 'react-native-fit-image';
+var ImagePicker = NativeModules.ImageCropPicker;
 import cssg from './GlobalStyle';
 import ImgDef from '../img/avatar.png';
-import {ImageCrop} from 'react-native-image-cropper'
 const Item = Picker.Item;
 
 const opcoesCamera = {
@@ -76,10 +74,17 @@ export default class Foto extends Component {
                     <Button transparent onPress={()=> this.voltar()}>
                         <Icon name='md-arrow-back' />
                     </Button>
-                    <Title>Fotos</Title>
+                    <Title>Publicação</Title>
+                    <Button transparent onPress={()=> this.submeter()}>
+                        <Icon name='md-checkmark' />
+                    </Button>
                 </Header>
                 <Content style={cssg.content}>
                     <Card>
+                        <CardItem style={cssg.tituloCardContainer}>
+                            <Thumbnail source={require('../img/avatar-mini.png')} />
+                            <Text style={cssg.tituloCard}>Modelo da Publicação</Text>
+                        </CardItem>
                         <CardItem>
                             <Picker
                                 mode="dropdown"
@@ -90,33 +95,23 @@ export default class Foto extends Component {
                         </CardItem>
                     </Card>
                         {this.exibirFormFotos()}
+                        <View style={{padding: 10}}></View>
                 </Content>
             </Container>
             </Image>
         );
     }
 
-
-
-                        // <ImageCrop
-                        //     ref={'cropper'}
-                        //     image={this.state.fotos[k].uri}
-                        //     cropHeight={this.state.modeloSelecionado.photos.height}
-                        //     cropWidth={this.state.modeloSelecionado.photos.width}
-                        //     panToMove={true}
-                        //     quality={0}
-                        //     pinchToZoom={true}
-                        //   />
     exibirFormFotos(){
         if(this.state.modeloSelecionado){
             return (
                 this.state.modeloSelecionado.photos.map((item, k) =>
                   <Card key={k} style={{ flex: 0 }}>
-                        <CardItem>
+                        <CardItem  style={cssg.tituloCardContainer}>
                             <Thumbnail size={30} source={{uri: this.props.aplicativo.url + this.props.cliente.photo}} />
                             <Text style={cssg.tituloCard}>{item.name}</Text>
-                            <Button onPress={() => this.obterFoto(k)} transparent><Icon name="md-camera" /></Button>
-                            {this.btnCrop(k)}
+                            <Button onPress={() => this.obterImagemGaleria(k, item)} transparent><Icon name="md-image" /></Button>
+                            <Button onPress={() => this.obterFoto(k, item)} transparent><Icon name="md-camera" /></Button>
                         </CardItem>
 
                         <CardItem >
@@ -129,21 +124,6 @@ export default class Foto extends Component {
     }
 
 
-    btnCrop(k){
-        if(typeof this.state.fotos[k] === 'object' && 'uri' in this.state.fotos[k]){
-            return (
-                <Button onPress={() => {
-                this.props.navigator.push({
-                    appRoute: 'Crop',
-                    img: this.state.fotos[k],
-                    h: this.state.modeloSelecionado.photos.height,
-                    w: this.state.modeloSelecionado.photos.width
-                  })
-            }} transparent><Icon name="md-crop" /></Button>
-            )
-        }return(<View></View>)
-    }
-
 
 
 
@@ -152,25 +132,34 @@ export default class Foto extends Component {
     }
 
 
+    submeter(){
+      this.props.navigator.popN(2);
+    }
 
-    obterFoto(k){
-        ImagePicker.showImagePicker(opcoesCamera, (response) => {
-            console.log('Response = ', response);
 
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            }else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            }else {
-                const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-                console.log(source)
+
+    obterImagemGaleria(k, item){
+            ImagePicker.openPicker({
+              width: item.width,
+              height: item.height,
+              cropping: true
+            }).then(image => {
                 let fotos = [...this.state.fotos];
-                fotos[k] = source;
+                fotos[k] = {uri: image.path};
                 this.setState({fotos: fotos});
-              }
-        });
+            }).catch((err)=>console.log(err));
+    }
+
+    obterFoto(k, item){
+            ImagePicker.openCamera({
+              width: item.width,
+              height: item.height,
+              cropping: true
+            }).then(image => {
+                let fotos = [...this.state.fotos];
+                fotos[k] = {uri: image.path};
+                this.setState({fotos: fotos});
+            }).catch((err)=>console.log(err));
     }
 
 }

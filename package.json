@@ -7,16 +7,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "gl-react": "^2.2.8",
-    "gl-react-native": "^2.39.0",
     "native-base": "^0.5.19",
     "react": "15.4.1",
     "react-native": "0.39.2",
     "react-native-datepicker": "^1.4.3",
-    "react-native-facebook-login": "^1.4.0",
-    "react-native-fit-image": "^1.4.7",
-    "react-native-image-cropper": "^0.2.1",
-    "react-native-image-picker": "^0.24.1",
+    "react-native-image-crop-picker": "^0.11.1",
     "react-native-splash-screen": "^1.0.9",
     "react-native-storage": "^0.1.4"
   },

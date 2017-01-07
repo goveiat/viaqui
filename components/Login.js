@@ -36,7 +36,6 @@ export default class Login extends Component {
             <Container>
                 <Content style={cssg.content}>
                     <Card style={cssg.card}>
-
                         <CardItem >
                             <Image  style={css.logo} source={{uri: this.props.logo}} />
                         </CardItem>

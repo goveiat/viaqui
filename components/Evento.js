@@ -15,7 +15,7 @@ import {
     Text,
     Icon } from 'native-base';
 
-import {StyleSheet, View, Slider, Image} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import cssg from './GlobalStyle';
@@ -74,7 +74,7 @@ export default class Evento extends Component {
 
                 <Content style={cssg.content} >
                 <Card style={{ flex: 0 }}>
-                    <CardItem style={{ alignItems: 'center' }}>
+                    <CardItem style={cssg.tituloCardContainer}>
                         <Thumbnail size={50} source={{uri: this.props.aplicativo.url + this.props.cliente.photo}} />
                         <Text style={cssg.tituloCard}>Cliente {this.props.cliente.name}</Text>
                     </CardItem>
