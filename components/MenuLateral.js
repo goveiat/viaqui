@@ -28,27 +28,20 @@ export default class MenuLateral extends Component {
     render() {
         return (
           <View>
-             <Image style={{resizeMode: 'cover', width: null, height: 200}} source={{uri: this.props.aplicativo.logo}} >
-             </Image>
+             {this.exibeImg()}
               {this.exibeOperador()}
-                    <List>
-                        <ListItem iconLeft>
-                            <Icon name="md-people" style={cssg.icon} />
-                            <Text>Clientes</Text>
-                            <Text note>{this.props.numClientes}</Text>
-                        </ListItem>
-                        <ListItem iconLeft>
-                            <Icon name="md-calendar" style={cssg.icon} />
-                            <Text>Histórico de Serviços</Text>
-                            <Text note>0</Text>
-                        </ListItem>
-                        <ListItem iconLeft>
-                            <Icon name="md-key" style={cssg.icon} />
-                            <Text>Conta</Text>
-                        </ListItem>
-                    </List>
+                {this.exibeMenu()}
           </View>
         );
+    }
+
+
+    exibeImg(){
+      if(this.props.aplicativo){
+          return (<Image style={{resizeMode: 'cover', width: null, height: 200}} source={{uri: this.props.aplicativo.logo}} />)
+      }else{
+          return (<Spinner style={{alignSelf: 'center'}} color='red' />)
+      }
     }
 
 
@@ -62,9 +55,38 @@ export default class MenuLateral extends Component {
             </View>
             )
       }else{
-          return (<Spinner color='red' />)
+          return (<Spinner style={{alignSelf: 'center'}} color='red' />)
       }
     }
+
+
+  exibeMenu(){
+    if(this.props.navigator != null){
+        return (
+            <List>
+                <ListItem iconLeft>
+                    <Icon name="md-people" style={cssg.icon} />
+                    <Text>Clientes</Text>
+                    <Text note>{this.props.numClientes}</Text>
+                </ListItem>
+                <ListItem iconLeft>
+                    <Icon name="md-calendar" style={cssg.icon} />
+                    <Text>Histórico de Serviços</Text>
+                    <Text note>0</Text>
+                </ListItem>
+                <ListItem button onPress={() => {
+                  this.props.navigator.replace({appRoute: 'Conta', dados: this.props.operador });
+                  this.props.closeDrawer();
+                }} iconLeft>
+                    <Icon name="md-key" style={cssg.icon} />
+                    <Text>Conta</Text>
+                </ListItem>
+            </List>
+        )
+    }else{
+        return (<Spinner style={{alignSelf: 'center'}} color='red' />)
+    }
+  }
 
 
 

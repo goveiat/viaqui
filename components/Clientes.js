@@ -18,17 +18,12 @@ import {
     Text,
     Icon } from 'native-base';
 import Utils from './Utils';
-import MenuLateral from './MenuLateral';
 import {View, StyleSheet, Image} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
-import Drawer from 'react-native-drawer'
 
 
-const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3, backgroundColor: '#fff'},
-  main: {paddingLeft: 3},
-}
+
 
 
 const css = StyleSheet.create({
@@ -42,7 +37,7 @@ export default class Clientes extends Component {
 
     constructor(props){
         super(props);
-        this._drawer = null;
+
         this.state = {
             clientes: [],
             filtrados: [],
@@ -59,28 +54,17 @@ export default class Clientes extends Component {
         this.buscaClientes();
         this.buscaServicos();
         this.buscaOperador()
+        this.props.setApp(this.props.aplicativo);
+        this.props.setNavigator(this.props.navigator);
     }
 
 
     render() {
         return (
-            <Drawer
-                elevation={4}
-                ref={(ref) => this._drawer = ref}
-                type="overlay"
-                content={<MenuLateral {...this.props} operador={this.state.operador} numClientes={this.state.clientes.length} />}
-                tapToClose={true}
-                openDrawerOffset={0.2}
-                panCloseMask={0.2}
-                closedDrawerOffset={-3}
-                styles={drawerStyles}
-                  tweenHandler={(ratio) => ({
-                    main: { opacity:(2-ratio)/2 }
-                  })}
-              >
+
             <Container>
                 <Header style={cssg.header}>
-                    <Button transparent onPress={()=>this._drawer.open()}><Icon name='md-menu' /></Button>
+                    <Button transparent onPress={()=>this.props.openDrawer()}><Icon name='md-menu' /></Button>
                     <Title>Clientes</Title>
                 </Header>
 
@@ -90,7 +74,6 @@ export default class Clientes extends Component {
 
 
             </Container>
-            </Drawer>
         );
     }
 
@@ -190,6 +173,7 @@ export default class Clientes extends Component {
             case 200:
             case "200":
                 Object.keys(retorno.users).map(((item, k)=> arr.push(retorno.users[item])));
+                self.props.setNumClientes(arr.length)
 
 
                 self.setState({
@@ -251,7 +235,8 @@ export default class Clientes extends Component {
             case 200:
             case "200":
                 user = retorno.user[self.props.id];
-                console.log(user)
+                self.props.setOperador(user)
+
                 self.setState({
                     operador: user,
                 })
