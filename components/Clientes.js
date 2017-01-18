@@ -172,7 +172,7 @@ export default class Clientes extends Component {
           switch(retorno.code){
             case 200:
             case "200":
-                Object.keys(retorno.users).map(((item, k)=> arr.push(retorno.users[item])));
+                arr = retorno.users;
                 self.props.setNumClientes(arr.length)
 
 
