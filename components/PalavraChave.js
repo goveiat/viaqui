@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, Image, View, TextInput} from 'react-native';
 import {Container, Content, Input, InputGroup, Button, Card, CardItem, Icon, Spinner} from 'native-base';
 import Logo from '../img/logo.png';
-import Utils from './Utils';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
@@ -11,7 +10,8 @@ import cssg from './GlobalStyle';
 const css = StyleSheet.create({
   linhaLogo: {padding: 20},
   logo: {alignSelf: 'center'},
-  msg: {textAlign:'center'}
+  msg: {textAlign:'center'},
+  input: {marginTop: 30}
 });
 
 
@@ -51,7 +51,7 @@ export default class PalavraChave extends Component {
                                   </CardItem>
                                   <CardItem cardBody>
                                         <Text style={css.msg}>Uma palavra chave foi enviada para o seu email pessoal. Informe-a no campo abaixo para prosseguir.</Text>
-                                          <InputGroup style={[{marginTop: 30}, this.state.erro && cssg.inputErro]}>
+                                          <InputGroup style={[css.input, this.state.erro && cssg.inputErro]}>
                                               <Icon style={this.state.erro && cssg.corErro} name='md-key' />
                                               <Input onChangeText={this.setPalavraChave.bind(this)} placeholder='Palavra Chave'/>
                                           </InputGroup>
@@ -62,7 +62,7 @@ export default class PalavraChave extends Component {
                         </Row>
                         <Row>
                             <Col>
-                              <Button onPress={this.buscaEmpresa.bind(this)} large block danger {...this.getAttrBtn()} />
+                              <Button onPress={this.buscaEmpresa.bind(this)} large block danger {...this.dadosBtn()} />
                             </Col>
                         </Row>
                       </Grid>
@@ -84,9 +84,9 @@ export default class PalavraChave extends Component {
       }
     }
 
-    getAttrBtn(){
+    dadosBtn(){
         if(this.state.enviando){
-            return {disabled: true, children: <Spinner color="#ff9900" />}
+            return {disabled: true, children: <Spinner {...StyleSheet.flatten(cssg.colorSpinner)} />}
         }else{
             return {children: 'Enviar'}
         }
@@ -98,23 +98,21 @@ export default class PalavraChave extends Component {
     }
 
     buscaEmpresa(){
+      this.setState({enviando: true});
       if(!this.valida()){
+        this.setState({enviando: false});
         return false;
       }
-      this.setState({enviando: true});
-      let self = this;
-      let uri = 'https://www.viaqui.com.br/component/api/app/users/wsconfig/raw';
-      let data = {pin: this.state.palavraChave};
-      Utils.post(uri, data)
+
+      storage.load({
+          key: 'aplicativo',
+          id: {pin: this.state.palavraChave},
+      })
       .then((retorno) => {
           this.setState({enviando: false});
           switch(retorno.code){
             case 200:
-                global.storage.save({
-                    key: 'aplicativo',
-                    rawData: retorno,
-                });
-                self.props.navigator.replace({appRoute: 'Login', dados: retorno});
+                this.props.navigator.replace({appRoute: 'Login', dados: retorno});
                 break;
             case 404:
                 this.setState({erro: 'A Palavra Chave informada é inválida.'});

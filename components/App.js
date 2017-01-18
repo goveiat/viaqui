@@ -47,57 +47,55 @@ export default class App extends Component {
 
     componentDidMount(){
         // this.limpaArmazenamento()
-        let self = this;
-
         console.log('Início')
 
-        global.storage.load({ //Busca localmente os dados do operador
+        storage.load({ //Busca localmente os dados do operador
             key: 'operador',
             id: 'autenticacao',
             autoSync: false,
         })
         .then(op => { //Se encontrou operador, busca localmente os dados do APP
             console.log('OP')
-            global.storage.load({
+            storage.load({
                 key: 'aplicativo',
                 autoSync: false,
             })
             .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
               console.log('OP-APP')
               op.aplicativo = app;
-              self.props.navigator.replace({appRoute: 'Clientes', dados: op})
+              this.refNavigator.replace({appRoute: 'Clientes', dados: op})
             }).catch(err => { //se encontrou operador, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
-              console.log('OP-!APP')
-              self.limpaArmazenamento()
+              console.log('OP-!APP', err)
+              this.limpaArmazenamento()
             })
         })
         .catch(err => { // Se não encontrou operador
             switch (err.name) {
                 case 'NotFoundError':
                 case 'ExpiredError':
-                      global.storage.load({ //Busca dados do APP
+                      storage.load({ //Busca dados do APP
                           key: 'aplicativo',
                           autoSync: false,
                       })
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
                           console.log('APP')
-                          self.props.navigator.replace({appRoute: 'Login', dados: app})
+                          this.refNavigator.replace({appRoute: 'Login', dados: app})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
                           console.log('PC')
                           switch (err.name) {
                               case 'NotFoundError':
                               case 'ExpiredError':
-                                self.refNavigator.replace({appRoute: 'PalavraChave'})
+                                this.refNavigator.replace({appRoute: 'PalavraChave'})
                               break;
                               default: //Erro desconhecido. Limpa armazenamento
-                                console.log('!APP')
-                                self.limpaArmazenamento()
+                                console.log('!APP', err)
+                                this.limpaArmazenamento()
                           }
                       });
                 break;
                 default: //Erro desconhecido. Limpa armazenamento
-                  console.log('!OP')
-                  self.limpaArmazenamento()
+                  console.log('!OP', err)
+                  this.limpaArmazenamento()
             }
 
         });
@@ -138,23 +136,6 @@ export default class App extends Component {
     }
 
 
-    setOperador(op){
-      this.setState({operador: op})
-    }
-
-    setNumClientes(num){
-      this.setState({numClientes: num})
-    }
-
-    setApp(app){
-      this.setState({aplicativo: app})
-    }
-
-    setNavigator(nav){
-      this.setState({navigator: nav})
-    }
-
-
     abreMenuLat(){
       this.refMenuLat.open()
     }
@@ -182,17 +163,12 @@ export default class App extends Component {
           return (<Login navigator={navigator} {...route.dados} />);
         case 'Clientes':
           return (<Clientes
-            setOperador={this.setOperador.bind(this)}
-            setNumClientes={this.setNumClientes.bind(this)}
-            setApp={this.setApp.bind(this)}
-            setNavigator={this.setNavigator.bind(this)}
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
             navigator={navigator}
             {...route.dados}/>);
         case 'Conta':
           return (<Conta
-            setNavigator={this.setNavigator.bind(this)}
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
             navigator={navigator}

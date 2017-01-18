@@ -55,7 +55,6 @@ export default class Clientes extends Component {
         this.buscaServicos();
         this.buscaOperador()
         this.props.setApp(this.props.aplicativo);
-        this.props.setNavigator(this.props.navigator);
     }
 
 
