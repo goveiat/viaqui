@@ -13,7 +13,10 @@ const styles = StyleSheet.create({
     lateralOverlay: {backgroundColor:'rgba(213,79,22, 1)',  padding: 5, elevation: 3, paddingLeft: 17},
     formRow: {minHeight: 60, borderBottomWidth: 1, borderColor: '#ebebeb', alignItems: 'center'},
     tituloCard: {marginLeft: 10, fontSize: 18},
-    tituloCardContainer: { alignItems: 'center' }
+    tituloCardContainer: { alignItems: 'center' },
+    alignCenter: {alignSelf: 'center'},
+    colorSpinner: {color: '#ff9900'}
+
 });
 
 module.exports = styles
