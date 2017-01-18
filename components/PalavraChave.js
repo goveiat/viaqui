@@ -25,49 +25,15 @@ export default class PalavraChave extends Component {
           palavraChave: '',
           enviando: false,
           erro: false,
-          exibir: false,
         }
     }
 
 
     componentDidMount(){
-      let self = this;
-      console.log('Inicio')
-      self.getOpData()
-      .then(op => {
-        console.log('OP')
-          self.getAppData()
-          .then(app => {
-            console.log('OP-APP')
-            op.aplicativo = app;
-            self.props.navigator.replace({appRoute: 'Clientes', dados: op})
-          })
-      }).catch(err => {
-          switch (err.name) {
-              case 'NotFoundError':
-              case 'ExpiredError':
-                    self.getAppData()
-                    .then(app => {
-                        console.log('APP')
-                        self.props.navigator.replace({appRoute: 'Login', dados: app})
-                    }).catch(err => {
-                        console.log('PC')
-                        switch (err.name) {
-                            case 'NotFoundError':
-                            case 'ExpiredError':
-                              SplashScreen.hide();
-                              this.setState({exibir: true});
-                            break;
-                        }
-                    });
-              break;
-          }
-
-      });
+        SplashScreen.hide();
     }
 
     render() {
-        if(this.state.exibir){
         return (
                 <Container>
                   <Content style={cssg.content}>
@@ -104,24 +70,9 @@ export default class PalavraChave extends Component {
             </Container>
 
         );
-        }else{
-          return <View />
-        }
     }
 
 
-    getAppData(){
-        return global.storage.load({
-              key: 'aplicativo',
-        })
-    }
-
-    getOpData(){
-      return global.storage.load({
-          key: 'operador',
-          id: 'autenticacao',
-      });
-    }
 
     exibeErro(){
       if(this.state.erro){

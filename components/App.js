@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Navigator, AsyncStorage, Image} from 'react-native';
+import {Navigator, Image, View} from 'react-native';
 import Clientes from './Clientes';
 import Evento from './Evento';
 import PalavraChave from './PalavraChave';
@@ -10,18 +10,8 @@ import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
 import Drawer from 'react-native-drawer'
 import MenuLateral from './MenuLateral';
-
-import Storage from 'react-native-storage';
-
-
-//Definição do armazenamento local
-global.storage = new Storage({
-      size: 1000,
-      storageBackend: AsyncStorage,
-      defaultExpires: null,
-      enableCache: false,
-      sync : {}
-});
+import Armazenamento from './Armazenamento';
+import {Spinner} from 'native-base';
 
 
 
@@ -44,7 +34,8 @@ export default class App extends Component {
     constructor(props){
         super(props);
 
-        this._drawer = null;
+        this.refMenuLat = null;
+        this.refNavigator = null;
 
         this.state = {
             operador: null,
@@ -55,43 +46,92 @@ export default class App extends Component {
     }
 
     componentDidMount(){
-        // storage.remove({
-        //   key: 'operador',
-        //   id: 'autenticacao'
-        // });
-        // storage.remove({
-        //   key: 'aplicativo',
-        // });
+        // this.limpaArmazenamento()
+        let self = this;
+
+        console.log('Início')
+
+        global.storage.load({ //Busca localmente os dados do operador
+            key: 'operador',
+            id: 'autenticacao',
+            autoSync: false,
+        })
+        .then(op => { //Se encontrou operador, busca localmente os dados do APP
+            console.log('OP')
+            global.storage.load({
+                key: 'aplicativo',
+                autoSync: false,
+            })
+            .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
+              console.log('OP-APP')
+              op.aplicativo = app;
+              self.props.navigator.replace({appRoute: 'Clientes', dados: op})
+            }).catch(err => { //se encontrou operador, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
+              console.log('OP-!APP')
+              self.limpaArmazenamento()
+            })
+        })
+        .catch(err => { // Se não encontrou operador
+            switch (err.name) {
+                case 'NotFoundError':
+                case 'ExpiredError':
+                      global.storage.load({ //Busca dados do APP
+                          key: 'aplicativo',
+                          autoSync: false,
+                      })
+                      .then(app => {  //Se encontrou dados do APP, vai para a página de login
+                          console.log('APP')
+                          self.props.navigator.replace({appRoute: 'Login', dados: app})
+                      }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
+                          console.log('PC')
+                          switch (err.name) {
+                              case 'NotFoundError':
+                              case 'ExpiredError':
+                                self.refNavigator.replace({appRoute: 'PalavraChave'})
+                              break;
+                              default: //Erro desconhecido. Limpa armazenamento
+                                console.log('!APP')
+                                self.limpaArmazenamento()
+                          }
+                      });
+                break;
+                default: //Erro desconhecido. Limpa armazenamento
+                  console.log('!OP')
+                  self.limpaArmazenamento()
+            }
+
+        });
     }
 
 
     render() {
         return (
             <Drawer
-              elevation={4}
-              ref={(ref) => this._drawer = ref}
-              type="overlay"
-              content={<MenuLateral
+                elevation={4}
+                ref={(ref) => this.refMenuLat = ref}
+                type="overlay"
+                content={<MenuLateral
                 aplicativo={this.state.aplicativo}
                 operador={this.state.operador}
                 navigator={this.state.navigator}
-                openDrawer={this.openDrawer.bind(this)}
-                closeDrawer={this.closeDrawer.bind(this)}
+                openDrawer={this.abreMenuLat.bind(this)}
+                closeDrawer={this.fechaMenuLat.bind(this)}
                 numClientes={this.state.numClientes} />}
-              tapToClose={true}
-              openDrawerOffset={0.2}
-              panCloseMask={0.2}
-              closedDrawerOffset={-3}
-              styles={drawerStyles}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                   main: { opacity:(2-ratio)/2 }
                 })}
             >
-        <Image style={cssg.cover} resizeMode='cover' source={require('../img/background.jpg')}>
-          <Navigator
-            style={{ flex:1 }}
-            initialRoute={{ appRoute: 'PalavraChave' }}
-            renderScene={ this.exibeView.bind(this) } />
+            <Image style={cssg.cover} resizeMode='cover' source={require('../img/background.jpg')}>
+                <Navigator
+                  ref={(nav)=> {this.refNavigator = nav}}
+                  style={{ flex:1 }}
+                  initialRoute={{ appRoute: 'App' }}
+                  renderScene={ this.exibeView.bind(this) } />
             </Image>
           </Drawer>
           )
@@ -115,12 +155,22 @@ export default class App extends Component {
     }
 
 
-    openDrawer(){
-      this._drawer.open()
+    abreMenuLat(){
+      this.refMenuLat.open()
     }
 
-    closeDrawer(){
-      this._drawer.close()
+    fechaMenuLat(){
+      this.refMenuLat.close()
+    }
+
+    limpaArmazenamento(){
+        storage.remove({
+          key: 'operador',
+          id: 'autenticacao'
+        });
+        storage.remove({
+          key: 'aplicativo',
+        });
     }
 
 
@@ -136,15 +186,15 @@ export default class App extends Component {
             setNumClientes={this.setNumClientes.bind(this)}
             setApp={this.setApp.bind(this)}
             setNavigator={this.setNavigator.bind(this)}
-            openDrawer={this.openDrawer.bind(this)}
-            closeDrawer={this.closeDrawer.bind(this)}
+            openDrawer={this.abreMenuLat.bind(this)}
+            closeDrawer={this.fechaMenuLat.bind(this)}
             navigator={navigator}
             {...route.dados}/>);
         case 'Conta':
           return (<Conta
             setNavigator={this.setNavigator.bind(this)}
-            openDrawer={this.openDrawer.bind(this)}
-            closeDrawer={this.closeDrawer.bind(this)}
+            openDrawer={this.abreMenuLat.bind(this)}
+            closeDrawer={this.fechaMenuLat.bind(this)}
             navigator={navigator}
             {...route.dados}/>);
         case 'Foto':
