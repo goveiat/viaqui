@@ -46,7 +46,7 @@ export default class App extends Component {
     }
 
     componentDidMount(){
-        // this.limpaArmazenamento()
+        this.limpaArmazenamento()
         console.log('Início')
 
         storage.load({ //Busca localmente os dados do operador
@@ -66,7 +66,7 @@ export default class App extends Component {
               this.refNavigator.replace({appRoute: 'Clientes', dados: op})
             }).catch(err => { //se encontrou operador, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
               console.log('OP-!APP', err)
-              this.limpaArmazenamento()
+              // this.limpaArmazenamento()
             })
         })
         .catch(err => { // Se não encontrou operador

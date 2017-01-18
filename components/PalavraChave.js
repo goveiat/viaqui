@@ -110,6 +110,7 @@ export default class PalavraChave extends Component {
       })
       .then((retorno) => {
           this.setState({enviando: false});
+          console.log(retorno)
           switch(retorno.code){
             case 200:
                 this.props.navigator.replace({appRoute: 'Login', dados: retorno});
