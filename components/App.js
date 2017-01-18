@@ -13,13 +13,15 @@ import MenuLateral from './MenuLateral';
 
 import Storage from 'react-native-storage';
 
+
+//Definição do armazenamento local
 global.storage = new Storage({
-            size: 1000,
-            storageBackend: AsyncStorage,
-            defaultExpires: null,
-            enableCache: false,
-            sync : {}
-        });
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: false,
+      sync : {}
+});
 
 
 
@@ -28,6 +30,15 @@ const drawerStyles = {
   main: {paddingLeft: 3},
 }
 
+
+/*
+  A classe App é classe de ignição do projeto, chamada pelos arquivos index.io e index.android.
+  Ela contém os elementos de layout, tais como imagem de fundo e o Drawer.
+  Os componentes específicos de cada view são renderizados pelo Navigator.
+  Os padrões de implementação são flexiveis.
+  Optou-se por priorizar o uso básico de ES6, tal como let, const, map, spread operator, Destructuring assignment e arrow function.
+  Para nomes de variáveis e funções, adota-se preferencialmente o português (exceto para get e set) e camel case.
+*/
 export default class App extends Component {
 
     constructor(props){
