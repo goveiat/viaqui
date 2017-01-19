@@ -67,29 +67,6 @@ export default class MenuLateral extends Component {
       }
     }
 
-    buscaLojista(){
-     storage.load({
-          key: 'lojista',
-          id: {
-            uri: this.props.aplicativo.url + this.props.path + this.props.auth
-          },
-      })
-      .then((retorno) => {
-          switch(retorno.code){
-            case 200:
-                this.setState({
-                    lojista: retorno.user[this.props.id],
-                })
-                break;
-            default:
-                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-          }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }
-
 
   exibeMenu(){
     if(this.props.getNavigator() != null){
