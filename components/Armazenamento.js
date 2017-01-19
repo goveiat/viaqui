@@ -10,7 +10,6 @@ global.storage = new Storage({
       defaultExpires: null,
       enableCache: false,
       sync : {
-          //id: {pin}
           aplicativo: function(params){
               let { id, resolve, reject } = params;
                 Utils.post('https://www.viaqui.com.br/component/api/app/users/wsconfig/raw', id)
@@ -25,7 +24,51 @@ global.storage = new Storage({
                     console.log(error);
                     reject && reject(error);
                 });
-          }
-
+          },
+          credenciais: function(params){
+                let { id, resolve, reject } = params;
+                Utils.post(id.uri, id.dados)
+                .then((retorno) => {
+                      storage.save({
+                          key: 'credenciais',
+                          rawData: retorno,
+                      });
+                      resolve && resolve(retorno);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject && reject(error);
+                });
+          },
+          clientes: function(params){
+                let { id, resolve, reject } = params;
+                Utils.get(id.uri, id.dados)
+                .then((retorno) => {
+                      storage.save({
+                          key: 'clientes',
+                          rawData: retorno,
+                      });
+                      resolve && resolve(retorno);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject && reject(error);
+                });
+          },
+          lojista: function(params){
+                let { id, resolve, reject } = params;
+                Utils.get(id.uri)
+                .then((retorno) => {
+                      storage.save({
+                          key: 'lojista',
+                          rawData: retorno,
+                      });
+                      resolve && resolve(retorno);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject && reject(error);
+                });
+          },
       }
 });

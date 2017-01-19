@@ -18,7 +18,10 @@ export default class Utils{
         },
         body: Utils.format(data)
       })
-      .then((response) => response.json().catch((err)=>500));
+      .then((response) =>
+          response.json()
+          .catch((err)=>500)
+      );
     }
 
     static get(uri, data){

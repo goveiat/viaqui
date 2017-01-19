@@ -17,28 +17,36 @@ export default class MenuLateral extends Component {
         super(props);
 
         this.state = {
-
+          aplicativo: null,
+          lojista: null,
         }
     }
 
     componentDidMount(){
       console.log(this.props)
+      storage.load({key: 'aplicativo', autoSync: false,})
+      .then(ret => {this.setState({aplicativo: ret})})
+      .catch(err=>{console.log('!APP')})
+
+      storage.load({key: 'lojista', autoSync: false,})
+      .then(ret => {this.setState({lojista: ret.user[0]})})
+      .catch(err=>{console.log(err)})
     }
 
     render() {
         return (
           <View>
-             {this.exibeImg()}
+              {this.exibeImg()}
               {this.exibeOperador()}
-                {this.exibeMenu()}
+              {this.exibeMenu()}
           </View>
         );
     }
 
 
     exibeImg(){
-      if(this.props.aplicativo){
-          return (<Image style={{resizeMode: 'cover', width: null, height: 200}} source={{uri: this.props.aplicativo.logo}} />)
+      if(this.state.aplicativo){
+          return (<Image style={{resizeMode: 'cover', width: null, height: 200}} source={{uri: this.state.aplicativo.logo}} />)
       }else{
           return (<Spinner style={{alignSelf: 'center'}} color='red' />)
       }
@@ -46,12 +54,12 @@ export default class MenuLateral extends Component {
 
 
     exibeOperador(){
-      if(this.props.operador != null){
+      if(this.state.lojista != null){
         return(
              <View style={cssg.lateralOverlay}>
-                <Thumbnail size={40} source={{uri: this.props.aplicativo.url + this.props.operador.photo}} />
-                <Text style={{fontWeight: 'bold', color: '#fff'}}>{this.props.operador.name}</Text>
-                <Text style={{color: '#fff'}}>{this.props.operador.email}</Text>
+                <Thumbnail size={40} source={{uri: this.state.aplicativo.url + this.state.lojista.photo}} />
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>{this.state.lojista.name}</Text>
+                <Text style={{color: '#fff'}}>{this.state.lojista.email}</Text>
             </View>
             )
       }else{
@@ -59,9 +67,32 @@ export default class MenuLateral extends Component {
       }
     }
 
+    buscaLojista(){
+     storage.load({
+          key: 'lojista',
+          id: {
+            uri: this.props.aplicativo.url + this.props.path + this.props.auth
+          },
+      })
+      .then((retorno) => {
+          switch(retorno.code){
+            case 200:
+                this.setState({
+                    lojista: retorno.user[this.props.id],
+                })
+                break;
+            default:
+                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+          }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+
 
   exibeMenu(){
-    if(this.props.navigator != null){
+    if(this.props.getNavigator() != null){
         return (
             <List>
                 <ListItem iconLeft>
@@ -75,8 +106,8 @@ export default class MenuLateral extends Component {
                     <Text note>0</Text>
                 </ListItem>
                 <ListItem button onPress={() => {
-                  this.props.navigator.replace({appRoute: 'Conta', dados: this.props.operador });
-                  this.props.closeDrawer();
+                  this.props.getNavigator().replace({appRoute: 'Conta', dados: this.state.lojista });
+                  this.props.fechaMenuLat();
                 }} iconLeft>
                     <Icon name="md-key" style={cssg.icon} />
                     <Text>Conta</Text>

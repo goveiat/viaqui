@@ -41,20 +41,18 @@ export default class App extends Component {
             operador: null,
             numClientes: null,
             aplicativo: null,
-            navigator: null
         }
     }
 
     componentDidMount(){
-        this.limpaArmazenamento()
+        // this.limpaArmazenamento()
         console.log('Início')
 
-        storage.load({ //Busca localmente os dados do operador
-            key: 'operador',
-            id: 'autenticacao',
+        storage.load({ //Busca localmente as credenciais
+            key: 'credenciais',
             autoSync: false,
         })
-        .then(op => { //Se encontrou operador, busca localmente os dados do APP
+        .then(op => { //Se encontrou credenciais, busca localmente os dados do APP
             console.log('OP')
             storage.load({
                 key: 'aplicativo',
@@ -64,12 +62,12 @@ export default class App extends Component {
               console.log('OP-APP')
               op.aplicativo = app;
               this.refNavigator.replace({appRoute: 'Clientes', dados: op})
-            }).catch(err => { //se encontrou operador, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
+            }).catch(err => { //se encontrou credenciais, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
               console.log('OP-!APP', err)
-              // this.limpaArmazenamento()
+              this.limpaArmazenamento()
             })
         })
-        .catch(err => { // Se não encontrou operador
+        .catch(err => { // Se não encontrou credenciais
             switch (err.name) {
                 case 'NotFoundError':
                 case 'ExpiredError':
@@ -109,12 +107,9 @@ export default class App extends Component {
                 ref={(ref) => this.refMenuLat = ref}
                 type="overlay"
                 content={<MenuLateral
-                aplicativo={this.state.aplicativo}
-                operador={this.state.operador}
-                navigator={this.state.navigator}
-                openDrawer={this.abreMenuLat.bind(this)}
-                closeDrawer={this.fechaMenuLat.bind(this)}
-                numClientes={this.state.numClientes} />}
+                  getNavigator={this.getNavigator.bind(this)}
+                  fechaMenuLat={this.fechaMenuLat.bind(this)}
+                  />}
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
@@ -135,6 +130,10 @@ export default class App extends Component {
           )
     }
 
+    getNavigator(){
+      return this.refNavigator;
+    }
+
 
     abreMenuLat(){
       this.refMenuLat.open()
@@ -146,11 +145,16 @@ export default class App extends Component {
 
     limpaArmazenamento(){
         storage.remove({
-          key: 'operador',
-          id: 'autenticacao'
+          key: 'aplicativo',
         });
         storage.remove({
-          key: 'aplicativo',
+          key: 'credenciais',
+        });
+        storage.remove({
+          key: 'lojista',
+        });
+        storage.remove({
+          key: 'clientes',
         });
     }
 

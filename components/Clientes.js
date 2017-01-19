@@ -44,7 +44,6 @@ export default class Clientes extends Component {
             enviando: false,
             erro: false,
             servicos: [],
-            operador: null
         }
     }
 
@@ -53,8 +52,6 @@ export default class Clientes extends Component {
         SplashScreen.hide();
         this.buscaClientes();
         this.buscaServicos();
-        this.buscaOperador()
-        this.props.setApp(this.props.aplicativo);
     }
 
 
@@ -161,39 +158,32 @@ export default class Clientes extends Component {
 
     buscaClientes(){
         let arr = [];
-      this.setState({enviando: true});
-      let self = this;
-      let uri = this.props.aplicativo.url + this.props.path + this.props.auth;
-      Utils.get(uri, {id: -1})
-      .then((retorno) => {
-        console.log(retorno)
-
-          switch(retorno.code){
-            case 200:
-            case "200":
-                arr = retorno.users;
-                self.props.setNumClientes(arr.length)
-
-
-                self.setState({
-                    enviando: false,
-                    clientes: arr,
-                    filtrados: arr
-                })
-                  global.storage.save({
-                      key: 'clientes',
-                      rawData: arr,
-                  });
-                break;
-            default:
-                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-          }
-          this.setState({enviando: false});
-      })
-      .catch((error) => {
-        this.setState({enviando: false});
-        console.error(error);
-      });
+        this.setState({enviando: true});
+         storage.load({
+              key: 'clientes',
+              id: {
+                uri: this.props.aplicativo.url + this.props.path + this.props.auth,
+                dados: {id: -1}
+              },
+          })
+          .then((retorno) => {
+              switch(retorno.code){
+                case 200:
+                    this.setState({
+                        enviando: false,
+                        clientes: retorno.users,
+                        filtrados: retorno.users
+                    })
+                    break;
+                default:
+                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+              }
+              this.setState({enviando: false});
+          })
+          .catch((error) => {
+            this.setState({enviando: false});
+            console.error(error);
+          });
     }
 
 
@@ -224,35 +214,7 @@ export default class Clientes extends Component {
     }
 
 
-    buscaOperador(){
-        let user = null;
-      let self = this;
-      let uri = this.props.aplicativo.url + this.props.path + this.props.auth;
-      Utils.get(uri)
-      .then((retorno) => {
-          switch(retorno.code){
-            case 200:
-            case "200":
-                user = retorno.user[self.props.id];
-                self.props.setOperador(user)
 
-                self.setState({
-                    operador: user,
-                })
-                  global.storage.save({
-                      key: 'operador',
-                      id: 'dados',
-                      rawData: user,
-                  });
-                break;
-            default:
-                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-          }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }
 
 
 
