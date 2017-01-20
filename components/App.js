@@ -45,14 +45,15 @@ export default class App extends Component {
             _credenciais: null,
             _lojista: null,
             _clientes: [],
-            _servicos: []
+            _servicos: [],
+            navigator: null,
         }
     }
 
     componentDidMount(){
         // this.limpaArmazenamento()
+        this.setState({navigator: this.refNavigator});
         console.log('Início')
-
         storage.load({ //Busca localmente as credenciais
             key: 'credenciais',
             autoSync: false,
@@ -114,10 +115,11 @@ export default class App extends Component {
                 ref={(ref) => this.refMenuLat = ref}
                 type="overlay"
                 content={<MenuLateral
-                  getNavigator={this.getNavigator.bind(this)}
+                  navigator={this.state.navigator}
                   fechaMenuLat={this.fechaMenuLat.bind(this)}
                   setAppState={this.setAppState.bind(this)}
                   _lojista={this.state._lojista}
+                  _aplicativo={this.state._aplicativo}
                   />}
                 tapToClose={true}
                 openDrawerOffset={0.2}
@@ -139,9 +141,6 @@ export default class App extends Component {
           )
     }
 
-    getNavigator(){
-      return this.refNavigator;
-    }
 
 
     abreMenuLat(){
@@ -206,6 +205,7 @@ export default class App extends Component {
             closeDrawer={this.fechaMenuLat.bind(this)}
             _aplicativo={this.state._aplicativo}
             _credenciais={this.state._credenciais}
+            _clientes={this.state._clientes}
             />);
 
 
@@ -251,8 +251,7 @@ export default class App extends Component {
           .then((retorno) => {
               switch(retorno.code){
                 case 200:
-                    loj = retorno.users[0];
-                    loj.code = retorno.code;
+                    loj = retorno.user[0];
                     this.setState({_lojista: loj});
                     break;
                 case 404:

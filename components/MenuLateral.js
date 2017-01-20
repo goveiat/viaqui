@@ -17,23 +17,19 @@ export default class MenuLateral extends Component {
         super(props);
 
         this.state = {
-          erro: false,
+
         }
     }
 
     componentDidMount(){
       console.log(this.props)
-        if(this.props._lojista == null){
-          this._lojista();
-        }
     }
 
     render() {
         return (
           <View>
-              {this.state.erro}
               {this.exibeImg()}
-              {this.exibeOperador()}
+              {this.exibeLojista()}
               {this.exibeMenu()}
           </View>
         );
@@ -41,21 +37,21 @@ export default class MenuLateral extends Component {
 
 
     exibeImg(){
-      if(this.props.aplicativo){
-          return (<Image style={{resizeMode: 'cover', width: null, height: 200}} source={{uri: this.props.aplicativo.logo}} />)
+      if(this.props._aplicativo){
+          return (<Image style={{resizeMode: 'cover', width: null, height: 200}} source={{uri: this.props._aplicativo.logo}} />)
       }else{
           return (<Spinner style={{alignSelf: 'center'}} color='red' />)
       }
     }
 
 
-    exibeOperador(){
-      if(this.state.lojista != null){
+    exibeLojista(){
+      if(this.props._lojista != null){
         return(
              <View style={cssg.lateralOverlay}>
-                <Thumbnail size={40} source={{uri: this.props.aplicativo.url + this.state.lojista.photo}} />
-                <Text style={{fontWeight: 'bold', color: '#fff'}}>{this.state.lojista.name}</Text>
-                <Text style={{color: '#fff'}}>{this.state.lojista.email}</Text>
+                <Thumbnail size={40} source={{uri: this.props._aplicativo.url + this.props._lojista.photo}} />
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>{this.props._lojista.name}</Text>
+                <Text style={{color: '#fff'}}>{this.props._lojista.email}</Text>
             </View>
             )
       }else{
@@ -65,11 +61,11 @@ export default class MenuLateral extends Component {
 
 
   exibeMenu(){
-    if(this.props.getNavigator() != null){
+    if(this.props.navigator != null){
         return (
             <List>
                 <ListItem onPress={() => {
-                  this.props.getNavigator().replace({appRoute: 'Clientes', dados: this.props.aplicativo });
+                  this.props.navigator.replace({appRoute: 'Clientes', dados: this.props._aplicativo });
                   this.props.fechaMenuLat();
                 }} iconLeft>
                     <Icon name="md-people" style={cssg.icon} />
@@ -77,7 +73,7 @@ export default class MenuLateral extends Component {
                     <Text note>{this.props.numClientes}</Text>
                 </ListItem>
                 <ListItem button onPress={() => {
-                  this.props.getNavigator().replace({appRoute: 'Conta', dados: this.state.lojista });
+                  this.props.navigator.replace({appRoute: 'Conta', dados: this.props._lojista });
                   this.props.fechaMenuLat();
                 }} iconLeft>
                     <Icon name="md-key" style={cssg.icon} />
