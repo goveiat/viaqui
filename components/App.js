@@ -252,7 +252,7 @@ export default class App extends Component {
               this.setState({_lojista: retorno.user[0]});
           })
           .catch((error) => {
-                Utils.get(id.uri)
+                Utils.get(uri)
                 .then((retorno) => {
                     switch(retorno.code){
                       case 200:
@@ -286,7 +286,7 @@ export default class App extends Component {
               this.setState({_clientes: retorno.users});
           })
           .catch((error) => {
-                Utils.get(id.uri, {id: -1})
+                Utils.get(uri, {id: -1})
                 .then((retorno) => {
                     switch(retorno.code){
                       case 200:
@@ -320,7 +320,7 @@ export default class App extends Component {
               this.setState({_servicos: retorno.services});
           })
           .catch((error) => {
-                Utils.get(id.uri)
+                Utils.get(uri)
                 .then((retorno) => {
                     switch(retorno.code){
                       case 200:
