@@ -38,32 +38,34 @@ export default class App extends Component {
         this.refNavigator = null;
 
         this.state = {
-            operador: null,
-            numClientes: null,
+            credenciais: null,
             aplicativo: null,
+            lojista: null,
+            clientes: null,
+            servicos: null
         }
     }
 
     componentDidMount(){
-        // this.limpaArmazenamento()
+        this.limpaArmazenamento()
         console.log('Início')
 
         storage.load({ //Busca localmente as credenciais
             key: 'credenciais',
             autoSync: false,
         })
-        .then(op => { //Se encontrou credenciais, busca localmente os dados do APP
-            console.log('OP')
+        .then(cred => { //Se encontrou credenciais, busca localmente os dados do APP
+            console.log(cred);
             storage.load({
                 key: 'aplicativo',
                 autoSync: false,
             })
             .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
-              console.log('OP-APP')
-              op.aplicativo = app;
-              this.refNavigator.replace({appRoute: 'Clientes', dados: op})
+              console.log(app);
+              this.setState({credenciais: cred, aplicativo: app});
+              this.refNavigator.replace({appRoute: 'Clientes'})
             }).catch(err => { //se encontrou credenciais, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
-              console.log('OP-!APP', err)
+              console.warn(err)
               this.limpaArmazenamento()
             })
         })
@@ -76,23 +78,24 @@ export default class App extends Component {
                           autoSync: false,
                       })
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
-                          console.log('APP')
-                          this.refNavigator.replace({appRoute: 'Login', dados: app})
+                          console.log(app)
+                          this.setState({aplicativo: app});
+                          this.refNavigator.replace({appRoute: 'Login'})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
-                          console.log('PC')
+                          console.log(err)
                           switch (err.name) {
                               case 'NotFoundError':
                               case 'ExpiredError':
                                 this.refNavigator.replace({appRoute: 'PalavraChave'})
                               break;
                               default: //Erro desconhecido. Limpa armazenamento
-                                console.log('!APP', err)
+                                console.warn(err)
                                 this.limpaArmazenamento()
                           }
                       });
                 break;
                 default: //Erro desconhecido. Limpa armazenamento
-                  console.log('!OP', err)
+                  console.warn(err)
                   this.limpaArmazenamento()
             }
 
@@ -107,6 +110,7 @@ export default class App extends Component {
                 ref={(ref) => this.refMenuLat = ref}
                 type="overlay"
                 content={<MenuLateral
+                  applicativo={this.state.aplicativo}
                   getNavigator={this.getNavigator.bind(this)}
                   fechaMenuLat={this.fechaMenuLat.bind(this)}
                   />}
@@ -159,24 +163,53 @@ export default class App extends Component {
     }
 
 
+    setAppState(state){
+        this.setState(state);
+    }
+
+    getAppState(state){
+        return this.state[state];
+    }
+
     exibeView(route, navigator) {
       switch(route.appRoute){
         case 'PalavraChave':
-          return (<PalavraChave navigator={navigator}/>);
+          return (<PalavraChave
+            setAppState={this.setAppState.bind(this)}
+            navigator={navigator}
+          />);
+
+
+
         case 'Login':
-          return (<Login navigator={navigator} {...route.dados} />);
+          return (<Login
+            navigator={navigator}
+            setAppState={this.setAppState.bind(this)}
+            getAppState={this.getAppState.bind(this)}
+            />);
+
+
+
         case 'Clientes':
           return (<Clientes
+            setAppState={this.setAppState.bind(this)}
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
             navigator={navigator}
-            {...route.dados}/>);
+            getAppState={this.getAppState.bind(this)}
+            />);
+
+
+
         case 'Conta':
           return (<Conta
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
             navigator={navigator}
-            {...route.dados}/>);
+            />);
+
+
+
         case 'Foto':
           return (<Foto
             navigator={navigator}
@@ -184,6 +217,9 @@ export default class App extends Component {
                 cliente={route.cliente}
                 aplicativo={route.aplicativo}
             />);
+
+
+
         case 'Evento':
           return (<Evento
             navigator={navigator}

@@ -54,6 +54,10 @@ export default class Clientes extends Component {
         this.buscaServicos();
     }
 
+    componentDidUpdate(prevProps, prevState){
+
+    }
+
 
     render() {
         return (
@@ -150,7 +154,6 @@ export default class Clientes extends Component {
                 appRoute: view,
                 cliente: item,
                 servicos: this.state.servicos,
-                aplicativo: this.props.aplicativo
               })
             break;
         }
@@ -162,7 +165,7 @@ export default class Clientes extends Component {
          storage.load({
               key: 'clientes',
               id: {
-                uri: this.props.aplicativo.url + this.props.path + this.props.auth,
+                uri: this.props.aplicativo.url + this.props.path + this.props.credenciais.auth,
                 dados: {id: -1}
               },
           })
@@ -189,7 +192,7 @@ export default class Clientes extends Component {
 
     buscaServicos(){
       let self = this;
-      let uri = this.props.aplicativo.url + this.props.pathServices + this.props.auth;
+      let uri = this.props.aplicativo.url + this.props.pathServices + this.props.credenciais.auth;
       Utils.get(uri)
       .then((retorno) => {
           switch(retorno.code){

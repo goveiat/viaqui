@@ -113,7 +113,8 @@ export default class PalavraChave extends Component {
           console.log(retorno)
           switch(retorno.code){
             case 200:
-                this.props.navigator.replace({appRoute: 'Login', dados: retorno});
+                this.props.setAppState({'aplicativo': retorno});
+                this.props.navigator.replace({appRoute: 'Login'});
                 break;
             case 404:
                 this.setState({erro: 'A Palavra Chave informada é inválida.'});

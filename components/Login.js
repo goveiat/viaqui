@@ -32,6 +32,9 @@ export default class Login extends Component {
     }
 
     render() {
+      if(this.props.getAppState('aplicativo') === null){
+          return (<Spinner style={{alignSelf: 'center'}} color="red" />);
+      }
         return (
             <Container>
                 <Content style={cssg.content}>
@@ -39,7 +42,7 @@ export default class Login extends Component {
                         <CardItem >
                             <Image
                                 style={[css.logo, {paddingTop: 60}]}
-                                source={{uri: this.props.logo}}
+                                source={{uri: this.props.getAppState('aplicativo').logo}}
                                 onLoad={(e) => this.setState({imgCompleta: true})}
                               >
                               {this.carregaImg()}
@@ -104,7 +107,7 @@ export default class Login extends Component {
        storage.load({
             key: 'credenciais',
             id: {
-              uri: this.props.url + this.props.path,
+              uri: this.props.getAppState('aplicativo').url + this.props.path,
               dados: {
                 password: this.state.senha,
                 username: this.state.usuario,
@@ -115,8 +118,8 @@ export default class Login extends Component {
             this.setState({enviando: false});
             switch(retorno.code){
               case 200:
-                    retorno.aplicativo = this.props;
-                    this.props.navigator.replace({appRoute: 'Clientes', dados: retorno })
+                    this.props.setAppState({'credenciais': retorno});
+                    this.props.navigator.replace({appRoute: 'Clientes'})
                   break;
               case 404:
                   this.setState({erro: 'Usuário e/ou senha inválidos'});
