@@ -5,7 +5,7 @@ import Logo from '../img/logo.png';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
-
+import Utils from './Utils';
 
 const css = StyleSheet.create({
   linhaLogo: {padding: 20},
@@ -104,31 +104,31 @@ export default class PalavraChave extends Component {
         return false;
       }
 
-      storage.load({
-          key: 'aplicativo',
-          id: {pin: this.state.palavraChave},
-      })
-      .then((retorno) => {
-          this.setState({enviando: false});
-          console.log(retorno)
-          switch(retorno.code){
-            case 200:
-                this.props.setAppState({_aplicativo: retorno}, ()=>{this.props.navigator.replace({appRoute: 'Login'});});
-                break;
-            case 404:
-                this.setState({erro: 'A Palavra Chave informada é inválida.'});
-                break;
-            case 403:
-                this.setState({erro: 'Acesso não autorizado.'});
-                break;
-            default:
-                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-          }
-      })
-      .catch((error) => {
-        this.setState({enviando: false});
-        console.error(error);
-      });
+        Utils.post('https://www.viaqui.com.br/component/api/app/users/wsconfig/raw', {pin: this.state.palavraChave})
+        .then((retorno) => {
+              this.setState({enviando: false});
+              switch(retorno.code){
+                case 200:
+                    storage.save({
+                      key: 'aplicativo',
+                      rawData: retorno,
+                    });
+                    this.props.setAppState({_aplicativo: retorno}, ()=>{this.props.navigator.replace({appRoute: 'Login'});});
+                    break;
+                case 404:
+                    this.setState({erro: 'A Palavra Chave informada é inválida.'});
+                    break;
+                case 403:
+                    this.setState({erro: 'Acesso não autorizado.'});
+                    break;
+                default:
+                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+              }
+
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
     }
 
     valida(){

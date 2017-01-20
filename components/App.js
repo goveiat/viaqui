@@ -174,6 +174,10 @@ export default class App extends Component {
         storage.remove({
           key: 'clientes',
         });
+        storage.remove({
+          key: 'servicos',
+        });
+        storage.clearMap();
     }
 
 
