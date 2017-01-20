@@ -49,10 +49,12 @@ export default class Clientes extends Component {
         SplashScreen.hide();
     }
 
-    componentDidUpdate(prevProps, prevStates){
-        if(prevProps._clientes === null && this.props._clientes != null){
-          this.setState({filtrados: this.props._clientes})
-        }
+    componentWillReceiveProps(nextProps){
+      if(nextProps._clientes !== null){
+        this.setState({filtrados: nextProps._clientes})
+        console.log(nextProps._clientes)
+      }
+
     }
 
 

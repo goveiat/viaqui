@@ -163,21 +163,12 @@ export default class App extends Component {
 
 
     limpaArmazenamento(){
-        storage.remove({
-          key: 'aplicativo',
-        });
-        storage.remove({
-          key: 'credenciais',
-        });
-        storage.remove({
-          key: 'lojista',
-        });
-        storage.remove({
-          key: 'clientes',
-        });
-        storage.remove({
-          key: 'servicos',
-        });
+        storage.remove({key: 'aplicativo'});
+        storage.remove({key: 'credenciais'});
+        storage.remove({key: 'lojista'});
+        storage.remove({key: 'clientes'});
+        storage.remove({key: 'servicos'});
+        storage.remove({key: 'horaClientes'});
         storage.clearMap();
     }
 
@@ -278,12 +269,61 @@ export default class App extends Component {
           });
     }
 
+
+
     _clientes(){
-        let arr = [];
+        let arrIds = [];
+        let objAtualizacoes = {};
+        let atualizado = [];
         let uri = this.state._aplicativo.url + this.props.pathClientes + this.state._credenciais.auth;
          storage.load({key: 'clientes'})
-          .then((retorno) => {
-              this.setState({_clientes: retorno.users});
+          .then((clientes) => { //
+              storage.load({key: 'horaClientes'})
+              .then((hora) => { //Não é a primeira Busca
+                  Utils.get(uri, {id: -1, update: hora})
+                  .then((atualizacoes) => {
+                      switch(atualizacoes.code){
+                        case 200:
+                            let arr = clientes.users;
+                            let atual = atualizacoes.users;
+                            if('users' in atualizacoes){
+                                atual.map((item)=> {
+                                  arrIds.push(item.id);
+                                  objAtualizacoes[item.id] = item;
+                                });
+
+                                atualizado = arr.map((item, k) => arrIds.indexOf(item.id) != -1 ? objAtualizacoes[item.id] : item);
+                                storage.save({
+                                    key: 'clientes',
+                                    rawData: atualizado,
+                                });
+                                storage.save({
+                                    key: 'horaClientes',
+                                    rawData: Utils.formatDate(new Date()),
+                                });
+                                this.setState({_clientes: atualizado});
+                            }else{
+                              this.setState({_clientes: clientes});
+                            }
+
+                            break;
+                        case 404:
+                            this.setState({erro: 'Conteúdo não encontrado'});
+                            break;
+                        case 403:
+                            this.setState({erro: 'Acesso não autorizado.'});
+                            break;
+                        default:
+                            this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+                      }
+                  })
+                  .catch((error) => {
+                      this.setState({_clientes: clientes});
+                  });
+              })
+              .catch((error) => {
+                  console.warn(error)
+              });
           })
           .catch((error) => {
                 Utils.get(uri, {id: -1})
@@ -293,6 +333,10 @@ export default class App extends Component {
                           storage.save({
                               key: 'clientes',
                               rawData: retorno,
+                          });
+                          storage.save({
+                              key: 'horaClientes',
+                              rawData: Utils.formatDate(new Date()),
                           });
                           this.setState({_clientes: retorno.users});
                           break;
@@ -310,7 +354,6 @@ export default class App extends Component {
                     console.warn(error);
                 });
           });
-
     }
 
     _servicos(){
