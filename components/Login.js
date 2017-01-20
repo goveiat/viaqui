@@ -24,21 +24,15 @@ export default class Login extends Component {
           erro: false,
           enviando: false,
           imgCompleta: false,
-          _aplicativo: null
         }
     }
 
     componentDidMount(){
         SplashScreen.hide();
-
-      storage.load({key: 'aplicativo', autoSync: false,})
-      .then(ret => {this.setState({_aplicativo: ret})})
-      .catch(err=>{console.log(err)})
-
     }
 
     render() {
-        if(this.state._aplicativo === null){
+        if(this.props._aplicativo === null){
             return (<Spinner style={cssg.alignCenter} {...StyleSheet.flatten(cssg.colorSpinner)} />);
         }else{
             return (
@@ -48,7 +42,7 @@ export default class Login extends Component {
                             <CardItem >
                                 <Image
                                     style={[css.logo, {paddingTop: 60}]}
-                                    source={{uri: this.state._aplicativo.logo}}
+                                    source={{uri: this.props._aplicativo.logo}}
                                     onLoad={(e) => this.setState({imgCompleta: true})}
                                   >
                                   {this.carregaImg()}
@@ -114,7 +108,7 @@ export default class Login extends Component {
        storage.load({
             key: 'credenciais',
             id: {
-              uri: this.state._aplicativo.url + this.props.path,
+              uri: this.props._aplicativo.url + this.props.path,
               dados: {
                 password: this.state.senha,
                 username: this.state.usuario,

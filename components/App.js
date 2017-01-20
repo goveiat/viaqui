@@ -62,7 +62,7 @@ export default class App extends Component {
             })
             .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
               console.log(app);
-              this.refNavigator.replace({appRoute: 'Clientes'})
+              this.setAppState({_aplicativo: app, _credenciais: cred}, ()=> {this.refNavigator.replace({appRoute: 'Clientes'})})
             }).catch(err => { //se encontrou credenciais, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
               console.warn(err)
               this.limpaArmazenamento()
@@ -78,7 +78,7 @@ export default class App extends Component {
                       })
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
                           console.log(app)
-                          this.refNavigator.replace({appRoute: 'Login'})
+                          this.setAppState({_aplicativo: app}, ()=> {this.refNavigator.replace({appRoute: 'Login'})})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
                           console.log(err)
                           switch (err.name) {
@@ -144,7 +144,9 @@ export default class App extends Component {
       this.refMenuLat.close()
     }
 
-
+    setAppState(data, callback){
+      this.setState(data, callback);
+    }
 
     limpaArmazenamento(){
         storage.remove({
@@ -167,6 +169,7 @@ export default class App extends Component {
         case 'PalavraChave':
           return (<PalavraChave
             navigator={navigator}
+            setAppState={this.setAppState.bind(this)}
           />);
 
 
@@ -174,7 +177,8 @@ export default class App extends Component {
         case 'Login':
           return (<Login
             navigator={navigator}
-            aplicativo={route.aplicativo}
+            setAppState={this.setAppState.bind(this)}
+            _aplicativo={this.state._aplicativo}
             />);
 
 
