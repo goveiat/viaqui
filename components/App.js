@@ -246,31 +246,35 @@ export default class App extends Component {
     }
 
     _lojista(){
-        let loj = null;
-         storage.load({
-              key: 'lojista',
-              id: {
-                uri: this.state._aplicativo.url + this.props.pathLojista + this.state._credenciais.auth,
-              },
-          })
+        let uri = this.state._aplicativo.url + this.props.pathLojista + this.state._credenciais.auth;
+         storage.load({key: 'lojista'})
           .then((retorno) => {
-              switch(retorno.code){
-                case 200:
-                    loj = retorno.user[0];
-                    this.setState({_lojista: loj});
-                    break;
-                case 404:
-                    this.setState({erro: 'Conteúdo não encontrado'});
-                    break;
-                case 403:
-                    this.setState({erro: 'Acesso não autorizado.'});
-                    break;
-                default:
-                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-              }
+              this.setState({_lojista: retorno.user[0]});
           })
           .catch((error) => {
-            console.error(error);
+                Utils.get(id.uri)
+                .then((retorno) => {
+                    switch(retorno.code){
+                      case 200:
+                          storage.save({
+                              key: 'lojista',
+                              rawData: retorno,
+                          });
+                          this.setState({_lojista: retorno.user[0]});
+                          break;
+                      case 404:
+                          this.setState({erro: 'Conteúdo não encontrado'});
+                          break;
+                      case 403:
+                          this.setState({erro: 'Acesso não autorizado.'});
+                          break;
+                      default:
+                          this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+                    }
+                })
+                .catch((error) => {
+                    console.warn(error);
+                });
           });
     }
 
@@ -309,34 +313,37 @@ export default class App extends Component {
 
     }
 
-
     _servicos(){
-
-       storage.load({
-            key: 'servicos',
-            id: {
-              uri: this.state._aplicativo.url + this.props.pathServices + this.state._credenciais.auth,
-            },
-        })
-      .then((retorno) => {
-        console.log(retorno)
-          switch(retorno.code){
-            case 200:
-                this.setState({_servicos: retorno.services})
-                break;
-            case 404:
-                this.setState({erro: 'Conteúdo não encontrado'});
-                break;
-            case 403:
-                this.setState({erro: 'Acesso não autorizado.'});
-                break;
-            default:
-                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-          }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        let uri = this.state._aplicativo.url + this.props.pathServices + this.state._credenciais.auth;
+         storage.load({key: 'servicos'})
+          .then((retorno) => {
+              this.setState({_servicos: retorno.services});
+          })
+          .catch((error) => {
+                Utils.get(id.uri)
+                .then((retorno) => {
+                    switch(retorno.code){
+                      case 200:
+                          storage.save({
+                              key: 'servicos',
+                              rawData: retorno,
+                          });
+                          this.setState({_servicos: retorno.services});
+                          break;
+                      case 404:
+                          this.setState({erro: 'Conteúdo não encontrado'});
+                          break;
+                      case 403:
+                          this.setState({erro: 'Acesso não autorizado.'});
+                          break;
+                      default:
+                          this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+                    }
+                })
+                .catch((error) => {
+                    console.warn(error);
+                });
+          });
     }
 
 }
