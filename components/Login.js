@@ -4,6 +4,7 @@ import {Spinner, Container, Content, Card, CardItem, Button, Icon, List, ListIte
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import Logo from '../img/logo.png';
 import cssg from './GlobalStyle';
+import Utils from './Utils';
 import SplashScreen from 'react-native-splash-screen';
 
 const css = StyleSheet.create({
@@ -105,16 +106,12 @@ export default class Login extends Component {
           return false;
         }
 
-       storage.load({
-            key: 'credenciais',
-            id: {
-              uri: this.props._aplicativo.url + this.props.path,
-              dados: {
-                password: this.state.senha,
-                username: this.state.usuario,
-              }
-            },
-        })
+        let uri = this.props._aplicativo.url + this.props.path;
+        let dados = {
+          password: this.state.senha,
+          username: this.state.usuario,
+        }
+        Utils.post(uri, dados)
         .then((retorno) => {
             this.setState({enviando: false});
             switch(retorno.code){
@@ -122,6 +119,10 @@ export default class Login extends Component {
                     this.props.setAppState({_credenciais: retorno}, ()=>{
                       this.props.setInitialState();
                       this.props.navigator.replace({appRoute: 'Clientes'});
+                    });
+                    storage.save({
+                        key: 'credenciais',
+                        rawData: retorno,
                     });
                   break;
               case 404:
@@ -135,8 +136,7 @@ export default class Login extends Component {
             }
         })
         .catch((error) => {
-          this.setState({enviando: false});
-          console.error(error);
+            console.warn(error);
         });
     }
 

@@ -11,6 +11,7 @@ import cssg from './GlobalStyle';
 import Drawer from 'react-native-drawer'
 import MenuLateral from './MenuLateral';
 import Armazenamento from './Armazenamento';
+import Utils from './Utils';
 import {Spinner} from 'native-base';
 
 
@@ -275,31 +276,37 @@ export default class App extends Component {
 
     _clientes(){
         let arr = [];
-         storage.load({
-              key: 'clientes',
-              id: {
-                uri: this.state._aplicativo.url + this.props.pathClientes + this.state._credenciais.auth,
-                dados: {id: -1}
-              },
-          })
+        let uri = this.state._aplicativo.url + this.props.pathClientes + this.state._credenciais.auth;
+         storage.load({key: 'clientes'})
           .then((retorno) => {
-              switch(retorno.code){
-                case 200:
-                    this.setState({_clientes: retorno.users});
-                    break;
-                case 404:
-                    this.setState({erro: 'Conteúdo não encontrado'});
-                    break;
-                case 403:
-                    this.setState({erro: 'Acesso não autorizado.'});
-                    break;
-                default:
-                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-              }
+              this.setState({_clientes: retorno.users});
           })
           .catch((error) => {
-            console.error(error);
+                Utils.get(id.uri, {id: -1})
+                .then((retorno) => {
+                    switch(retorno.code){
+                      case 200:
+                          storage.save({
+                              key: 'clientes',
+                              rawData: retorno,
+                          });
+                          this.setState({_clientes: retorno.users});
+                          break;
+                      case 404:
+                          this.setState({erro: 'Conteúdo não encontrado'});
+                          break;
+                      case 403:
+                          this.setState({erro: 'Acesso não autorizado.'});
+                          break;
+                      default:
+                          this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+                    }
+                })
+                .catch((error) => {
+                    console.warn(error);
+                });
           });
+
     }
 
 

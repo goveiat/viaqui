@@ -10,40 +10,7 @@ global.storage = new Storage({
       defaultExpires: null,
       enableCache: false,
       sync : {
-          credenciais: function(params){
-                let { id, resolve, reject } = params;
-                Utils.post(id.uri, id.dados)
-                .then((retorno) => {
-                      if(retorno.code == 200){
-                        storage.save({
-                            key: 'credenciais',
-                            rawData: retorno,
-                        });
-                      }
-                      resolve && resolve(retorno);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    reject && reject(error);
-                });
-          },
-          clientes: function(params){
-                let { id, resolve, reject } = params;
-                Utils.get(id.uri, id.dados)
-                .then((retorno) => {
-                      if(retorno.code == 200){
-                        storage.save({
-                            key: 'clientes',
-                            rawData: retorno,
-                        });
-                      }
-                      resolve && resolve(retorno);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    reject && reject(error);
-                });
-          },
+
           lojista: function(params){
                 let { id, resolve, reject } = params;
                 Utils.get(id.uri)
