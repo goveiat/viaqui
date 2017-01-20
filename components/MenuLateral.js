@@ -22,7 +22,7 @@ export default class MenuLateral extends Component {
     }
 
     componentDidMount(){
-      console.log(this.props)
+
     }
 
     render() {

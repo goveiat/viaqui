@@ -40,7 +40,6 @@ export default class Clientes extends Component {
 
         this.state = {
             filtrados: [],
-            enviando: false,
             erro: false,
         }
     }
@@ -48,8 +47,11 @@ export default class Clientes extends Component {
 
     componentDidMount(){
         SplashScreen.hide();
-        if(this.props._clientes.length == 0){
-          this._clientes();
+    }
+
+    componentDidUpdate(prevProps, prevStates){
+        if(prevProps._clientes === null && this.props._clientes != null){
+          this.setState({filtrados: this.props._clientes})
         }
     }
 
@@ -73,13 +75,18 @@ export default class Clientes extends Component {
     exibir(){
         let f = this.state.filtrados;
         let url = this.props._aplicativo.url;
+
+        if(this.props._clientes === null){
+            return <Spinner style={{alignSelf: 'center'}} color="#ff9900" />
+        }
+
         if(f.length > 0){
             return(
                 <View>
                     {this.exibeBusca()}
                     <Card style={css.card} dataArray={f}
                           renderRow={(item) =>
-                                <CardItem button onPress={() => this.navegar('Evento', item)}>
+                                <CardItem button onPress={() => {this.props.navigator.push({appRoute: 'Evento',cliente: item})}}>
                                     <Thumbnail style={css.avatar}  size={80} source={{uri: url+item.photo}} />
                                     <Grid>
                                         <Row><Text style={css.nome}>{item.name}</Text></Row>
@@ -93,7 +100,7 @@ export default class Clientes extends Component {
             )
         }
 
-        if(f.length === 0 && !this.state.enviando){
+        if(f.length === 0){
             return (
                 <View>
                 {this.exibeBusca()}
@@ -108,11 +115,6 @@ export default class Clientes extends Component {
             )
         }
 
-        if(this.state.enviando && f.length === 0){
-            return <Spinner style={{alignSelf: 'center'}} color="#ff9900" />
-        }else{
-
-        }
     }
 
     exibeBusca(){
@@ -140,91 +142,12 @@ export default class Clientes extends Component {
     }
 
 
-    navegar(view, item){
-        switch(view){
-            case 'Evento':
-              this.props.navigator.push({
-                appRoute: view,
-                cliente: item,
-                servicos: this.state.servicos,
-              })
-            break;
-        }
-    }
-
-    _clientes(){
-        let arr = [];
-        this.setState({enviando: true});
-         storage.load({
-              key: 'clientes',
-              id: {
-                uri: this.props._aplicativo.url + this.props.path + this.props._credenciais.auth,
-                dados: {id: -1}
-              },
-          })
-          .then((retorno) => {
-              switch(retorno.code){
-                case 200:
-                    this.setState({
-                        enviando: false,
-                        filtrados: retorno.users
-                    })
-                    this.props.setAppState({_clientes: retorno.users});
-                    break;
-                case 404:
-                    this.setState({erro: 'Conteúdo não encontrado'});
-                    break;
-                case 403:
-                    this.setState({erro: 'Acesso não autorizado.'});
-                    break;
-                default:
-                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-              }
-              this.setState({enviando: false});
-          })
-          .catch((error) => {
-            this.setState({enviando: false});
-            console.error(error);
-          });
-    }
-
-
-    buscaServicos(){
-      let self = this;
-      let uri = this.props._aplicativo.url + this.props.pathServices + this.props._credenciais.auth;
-      Utils.get(uri)
-      .then((retorno) => {
-          switch(retorno.code){
-            case 200:
-            case "200":
-                self.setState({
-                    servicos: retorno.services,
-                })
-                  global.storage.save({
-                      key: 'servicos',
-                      rawData: retorno.services,
-                  });
-                break;
-            default:
-                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
-          }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }
-
-
-
-
-
 
 
 }
 
 Clientes.defaultProps = {
-  path: '/component/api/app/users/users/raw/',
-  pathServices: '/component/api/app/events/services/raw/',
+
 }
 
 

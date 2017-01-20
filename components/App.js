@@ -44,28 +44,27 @@ export default class App extends Component {
             _aplicativo: null,
             _credenciais: null,
             _lojista: null,
-            _clientes: [],
+            _clientes: null,
             _servicos: [],
             navigator: null,
+            erro: false,
         }
     }
 
     componentDidMount(){
         // this.limpaArmazenamento()
         this.setState({navigator: this.refNavigator});
-        console.log('Início')
+
         storage.load({ //Busca localmente as credenciais
             key: 'credenciais',
             autoSync: false,
         })
         .then(cred => { //Se encontrou credenciais, busca localmente os dados do APP
-            console.log(cred);
             storage.load({
                 key: 'aplicativo',
                 autoSync: false,
             })
             .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
-              console.log(app);
               this.setState({_aplicativo: app, _credenciais: cred}, ()=> {
                 this.setInitialState();
                 this.refNavigator.replace({appRoute: 'Clientes'});
@@ -84,7 +83,6 @@ export default class App extends Component {
                           autoSync: false,
                       })
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
-                          console.log(app)
                           this.setState({_aplicativo: app}, ()=> {this.refNavigator.replace({appRoute: 'Login'})})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
                           console.log(err)
@@ -157,7 +155,9 @@ export default class App extends Component {
 
 
     setInitialState(){
+        this._clientes();
         this._lojista();
+        this._servicos();
     }
 
 
@@ -268,8 +268,69 @@ export default class App extends Component {
             console.error(error);
           });
     }
+
+    _clientes(){
+        let arr = [];
+         storage.load({
+              key: 'clientes',
+              id: {
+                uri: this.state._aplicativo.url + this.props.pathClientes + this.state._credenciais.auth,
+                dados: {id: -1}
+              },
+          })
+          .then((retorno) => {
+              switch(retorno.code){
+                case 200:
+                    this.setState({_clientes: retorno.users});
+                    break;
+                case 404:
+                    this.setState({erro: 'Conteúdo não encontrado'});
+                    break;
+                case 403:
+                    this.setState({erro: 'Acesso não autorizado.'});
+                    break;
+                default:
+                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+              }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    }
+
+
+    _servicos(){
+       storage.load({
+            key: 'servicos',
+            id: {
+              uri: this.state._aplicativo.url + this.props.pathServices + this.state._credenciais.auth,
+            },
+        })
+      .then((retorno) => {
+        console.log(retorno)
+          switch(retorno.code){
+            case 200:
+                this.setState({_servicos: retorno.services})
+                break;
+            case 404:
+                this.setState({erro: 'Conteúdo não encontrado'});
+                break;
+            case 403:
+                this.setState({erro: 'Acesso não autorizado.'});
+                break;
+            default:
+                this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+          }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+
 }
 
 App.defaultProps = {
   pathLojista: '/component/api/app/users/users/raw/',
+  pathClientes: '/component/api/app/users/users/raw/',
+  pathServices: '/component/api/app/events/services/raw/',
 }
