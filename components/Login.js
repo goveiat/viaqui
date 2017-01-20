@@ -23,49 +23,56 @@ export default class Login extends Component {
           senha: '',
           erro: false,
           enviando: false,
-          imgCompleta: false
+          imgCompleta: false,
+          _aplicativo: null
         }
     }
 
     componentDidMount(){
         SplashScreen.hide();
+
+      storage.load({key: 'aplicativo', autoSync: false,})
+      .then(ret => {this.setState({_aplicativo: ret})})
+      .catch(err=>{console.log(err)})
+
     }
 
     render() {
-        if(this.props.aplicativo === null){
+        if(this.state._aplicativo === null){
             return (<Spinner style={cssg.alignCenter} {...StyleSheet.flatten(cssg.colorSpinner)} />);
-        }
-        return (
-            <Container>
-                <Content style={cssg.content}>
-                    <Card style={cssg.card}>
-                        <CardItem >
-                            <Image
-                                style={[css.logo, {paddingTop: 60}]}
-                                source={{uri: this.props.aplicativo.logo}}
-                                onLoad={(e) => this.setState({imgCompleta: true})}
-                              >
-                              {this.carregaImg()}
-                            </Image>
-                        </CardItem>
+        }else{
+            return (
+                <Container>
+                    <Content style={cssg.content}>
+                        <Card style={cssg.card}>
+                            <CardItem >
+                                <Image
+                                    style={[css.logo, {paddingTop: 60}]}
+                                    source={{uri: this.state._aplicativo.logo}}
+                                    onLoad={(e) => this.setState({imgCompleta: true})}
+                                  >
+                                  {this.carregaImg()}
+                                </Image>
+                            </CardItem>
 
-                        <CardItem body>
-                            <Text style={cssg.titulo}>Informe suas credenciais nos campos abaixo:</Text>
-                            <InputGroup style={[css.marginInput, this.state.erro && cssg.inputErro]}>
-                                <Icon style={this.state.erro && cssg.corErro} name="md-person" />
-                                <Input onChangeText={(txt) => this.setState({usuario: txt})} placeholder="Usuário" />
-                            </InputGroup>
-                            <InputGroup style={[css.marginInput, this.state.erro && cssg.inputErro]}>
-                                <Icon style={this.state.erro && cssg.corErro} name="md-unlock" />
-                                <Input onChangeText={(txt) => this.setState({senha: txt})} placeholder="Senha" secureTextEntry />
-                            </InputGroup>
-                            {this.exibeErro()}
-                        </CardItem>
-                   </Card>
-                  <Button onPress={this.autentica.bind(this)} large block danger {...this.dadosBtn()} />
-                </Content>
-            </Container>
-        );
+                            <CardItem body>
+                                <Text style={cssg.titulo}>Informe suas credenciais nos campos abaixo:</Text>
+                                <InputGroup style={[css.marginInput, this.state.erro && cssg.inputErro]}>
+                                    <Icon style={this.state.erro && cssg.corErro} name="md-person" />
+                                    <Input onChangeText={(txt) => this.setState({usuario: txt})} placeholder="Usuário" />
+                                </InputGroup>
+                                <InputGroup style={[css.marginInput, this.state.erro && cssg.inputErro]}>
+                                    <Icon style={this.state.erro && cssg.corErro} name="md-unlock" />
+                                    <Input onChangeText={(txt) => this.setState({senha: txt})} placeholder="Senha" secureTextEntry />
+                                </InputGroup>
+                                {this.exibeErro()}
+                            </CardItem>
+                       </Card>
+                      <Button onPress={this.autentica.bind(this)} large block danger {...this.dadosBtn()} />
+                    </Content>
+                </Container>
+            );
+        }
     }
 
 
@@ -107,7 +114,7 @@ export default class Login extends Component {
        storage.load({
             key: 'credenciais',
             id: {
-              uri: this.props.aplicativo.url + this.props.path,
+              uri: this.state._aplicativo.url + this.props.path,
               dados: {
                 password: this.state.senha,
                 username: this.state.usuario,
@@ -118,7 +125,6 @@ export default class Login extends Component {
             this.setState({enviando: false});
             switch(retorno.code){
               case 200:
-                    this.props.setAppState({'credenciais': retorno});
                     this.props.navigator.replace({appRoute: 'Clientes'})
                   break;
               case 404:

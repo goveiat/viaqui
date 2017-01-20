@@ -38,11 +38,11 @@ export default class App extends Component {
         this.refNavigator = null;
 
         this.state = {
-            credenciais: null,
-            aplicativo: null,
-            lojista: null,
-            clientes: null,
-            servicos: null
+            _aplicativo: null,
+            _credenciais: null,
+            _lojista: null,
+            _clientes: [],
+            _servicos: []
         }
     }
 
@@ -62,7 +62,6 @@ export default class App extends Component {
             })
             .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
               console.log(app);
-              this.setState({credenciais: cred, aplicativo: app});
               this.refNavigator.replace({appRoute: 'Clientes'})
             }).catch(err => { //se encontrou credenciais, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
               console.warn(err)
@@ -79,7 +78,6 @@ export default class App extends Component {
                       })
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
                           console.log(app)
-                          this.setState({aplicativo: app});
                           this.refNavigator.replace({appRoute: 'Login'})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
                           console.log(err)
@@ -110,7 +108,6 @@ export default class App extends Component {
                 ref={(ref) => this.refMenuLat = ref}
                 type="overlay"
                 content={<MenuLateral
-                  aplicativo={this.state.aplicativo}
                   getNavigator={this.getNavigator.bind(this)}
                   fechaMenuLat={this.fechaMenuLat.bind(this)}
                   />}
@@ -147,6 +144,8 @@ export default class App extends Component {
       this.refMenuLat.close()
     }
 
+
+
     limpaArmazenamento(){
         storage.remove({
           key: 'aplicativo',
@@ -163,16 +162,11 @@ export default class App extends Component {
     }
 
 
-    setAppState(state){
-        this.setState(state);
-    }
-
     exibeView(route, navigator) {
       switch(route.appRoute){
         case 'PalavraChave':
           return (<PalavraChave
             navigator={navigator}
-            setAppState={this.setAppState.bind(this)}
           />);
 
 
@@ -180,8 +174,7 @@ export default class App extends Component {
         case 'Login':
           return (<Login
             navigator={navigator}
-            setAppState={this.setAppState.bind(this)}
-            aplicativo={this.state.aplicativo}
+            aplicativo={route.aplicativo}
             />);
 
 
@@ -189,11 +182,10 @@ export default class App extends Component {
         case 'Clientes':
           return (<Clientes
             navigator={navigator}
-            setAppState={this.setAppState.bind(this)}
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
-            aplicativo={this.state.aplicativo}
-            credenciais={this.state.credenciais}
+            aplicativo={route.aplicativo}
+            credenciais={route.credenciais}
             />);
 
 

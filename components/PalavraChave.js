@@ -113,7 +113,6 @@ export default class PalavraChave extends Component {
           console.log(retorno)
           switch(retorno.code){
             case 200:
-                this.props.setAppState({'aplicativo': retorno});
                 this.props.navigator.replace({appRoute: 'Login'});
                 break;
             case 404:

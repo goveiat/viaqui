@@ -39,31 +39,40 @@ export default class Clientes extends Component {
         super(props);
 
         this.state = {
-            clientes: [],
             filtrados: [],
             enviando: false,
             erro: false,
             servicos: [],
+            _credenciais: null,
+            _aplicativo: null,
+            _clientes: [],
         }
     }
 
 
     componentDidMount(){
         SplashScreen.hide();
-        this.buscaClientes();
-        this.buscaServicos();
+        storage.load({key: 'aplicativo', autoSync: false,})
+        .then(app => {
+            storage.load({key: 'credenciais', autoSync: false,})
+            .then(cred => {
+              this.setState({_credenciais: cred, _aplicativo: app}, () => {
+                this.buscaClientes();
+              })
+
+            })
+            .catch(err=>{console.log(err)})
+          })
+        .catch(err=>{console.log(err)})
+
     }
 
-    componentDidUpdate(prevProps, prevState){
-
-    }
 
 
     render() {
-        if(this.props.aplicativo === null){
+        if(this.state._aplicativo === null || this.state._credenciais === null){
             return (<Spinner style={cssg.alignCenter} {...StyleSheet.flatten(cssg.colorSpinner)} />);
-        }
-
+        }else{
         return (
             <Container>
                 <Header style={cssg.header}>
@@ -74,15 +83,14 @@ export default class Clientes extends Component {
                 <Content >
                         {this.exibir()}
                 </Content>
-
-
             </Container>
         );
+        }
     }
 
     exibir(){
         let f = this.state.filtrados;
-        let url = this.props.aplicativo.url;
+        let url = this.state._aplicativo.url;
         if(f.length > 0){
             return(
                 <View>
@@ -141,7 +149,7 @@ export default class Clientes extends Component {
 
     filtrar(busca){
         let lista = [];
-        for(let cliente of this.state.clientes){
+        for(let cliente of this.state._clientes){
             if(cliente.name.toLowerCase().indexOf(busca.toLowerCase()) !== -1){
                 lista.push(cliente);
             }
@@ -168,7 +176,7 @@ export default class Clientes extends Component {
          storage.load({
               key: 'clientes',
               id: {
-                uri: this.props.aplicativo.url + this.props.path + this.props.credenciais.auth,
+                uri: this.state._aplicativo.url + this.props.path + this.state._credenciais.auth,
                 dados: {id: -1}
               },
           })
@@ -195,7 +203,7 @@ export default class Clientes extends Component {
 
     buscaServicos(){
       let self = this;
-      let uri = this.props.aplicativo.url + this.props.pathServices + this.props.credenciais.auth;
+      let uri = this.state._aplicativo.url + this.props.pathServices + this.state._credenciais.auth;
       Utils.get(uri)
       .then((retorno) => {
           switch(retorno.code){
