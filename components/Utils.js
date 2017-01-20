@@ -1,6 +1,6 @@
 export default class Utils{
 
-    static format(params){
+    static formatparams(params){
       let query = "";
       for (key in params) {
           query += encodeURIComponent(key)+"="+encodeURIComponent(params[key])+"&";
@@ -16,7 +16,7 @@ export default class Utils{
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
           'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
         },
-        body: Utils.format(data)
+        body: Utils.formatparams(data)
       })
       .then((response) =>
           response.json()
@@ -26,10 +26,21 @@ export default class Utils{
 
     static get(uri, data){
       if(typeof data !== 'undefined'){
-        uri = uri+'?'+Utils.format(data);
+        uri = uri+'?'+Utils.formatparams(data);
       }
 
       return fetch(uri).then((response) => response.json());
+    }
+
+    static formatDate(date){
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let seconds = date.getSeconds();
+
+      return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     }
 
 }
