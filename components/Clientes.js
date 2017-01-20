@@ -132,12 +132,7 @@ export default class Clientes extends Component {
 
 
     filtrar(busca){
-        let lista = [];
-        for(let cliente of this.props._clientes){
-            if(cliente.name.toLowerCase().indexOf(busca.toLowerCase()) !== -1){
-                lista.push(cliente);
-            }
-        }
+        let lista = this.props._clientes.filter((cliente) => cliente.name.toLowerCase().indexOf(busca.toLowerCase()) !== -1 ? cliente : false)
         this.setState({filtrados: lista})
     }
 
