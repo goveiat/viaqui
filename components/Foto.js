@@ -57,9 +57,9 @@ export default class Foto extends Component {
 
     componentDidMount(){
         let fotos = [];
-        this.props.servico.model[0].photos.map((item)=>fotos.push(ImgDef))
+        this.props.servico.models[0].photos.map((item)=>fotos.push(ImgDef))
         this.setState({
-            modeloSelecionado: this.props.servico.model[0],
+            modeloSelecionado: this.props.servico.models[0],
             fotos: fotos
         })
     }
@@ -90,7 +90,7 @@ export default class Foto extends Component {
                                 mode="dropdown"
                                 selectedValue={this.state.modeloSelecionado}
                                 onValueChange={(item)=>this.setState({modeloSelecionado: item})}>
-                                {this.props.servico.model.map((item, k) => <Item key={k} label={item.name} value={item} />)}
+                                {this.props.servico.models.map((item, k) => <Item key={k} label={item.name} value={item} />)}
                                </Picker>
                         </CardItem>
                     </Card>
@@ -108,8 +108,8 @@ export default class Foto extends Component {
                 this.state.modeloSelecionado.photos.map((item, k) =>
                   <Card key={k} style={{ flex: 0 }}>
                         <CardItem  style={cssg.tituloCardContainer}>
-                            <Thumbnail size={30} source={{uri: this.props.aplicativo.url + this.props.cliente.photo}} />
-                            <Text style={cssg.tituloCard}>{item.name}</Text>
+                            <Thumbnail size={30} source={{uri: this.props._aplicativo.url + this.props.cliente.photo}} />
+                            <Text style={cssg.tituloCard}>{item.description}</Text>
                             <Button onPress={() => this.obterImagemGaleria(k, item)} transparent><Icon name="md-image" /></Button>
                             <Button onPress={() => this.obterFoto(k, item)} transparent><Icon name="md-camera" /></Button>
                         </CardItem>
@@ -140,8 +140,8 @@ export default class Foto extends Component {
 
     obterImagemGaleria(k, item){
             ImagePicker.openPicker({
-              width: item.width,
-              height: item.height,
+              width: Number(item.width),
+              height: Number(item.height),
               cropping: true
             }).then(image => {
                 let fotos = [...this.state.fotos];
@@ -152,8 +152,8 @@ export default class Foto extends Component {
 
     obterFoto(k, item){
             ImagePicker.openCamera({
-              width: item.width,
-              height: item.height,
+              width: Number(item.width),
+              height: Number(item.height),
               cropping: true
             }).then(image => {
                 let fotos = [...this.state.fotos];

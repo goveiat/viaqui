@@ -222,9 +222,9 @@ export default class App extends Component {
         case 'Foto':
           return (<Foto
             navigator={navigator}
-                servico={route.servico}
-                cliente={route.cliente}
-                aplicativo={route.aplicativo}
+            servico={route.servico}
+            cliente={route.cliente}
+            _aplicativo={this.state._aplicativo}
             />);
 
 
@@ -233,8 +233,8 @@ export default class App extends Component {
           return (<Evento
             navigator={navigator}
             cliente={route.cliente}
-            servicos={route.servicos}
-            aplicativo={route.aplicativo}
+            _aplicativo={this.state._aplicativo}
+            _servicos={this.state._servicos}
             />);
       }
 
@@ -300,6 +300,7 @@ export default class App extends Component {
 
 
     _servicos(){
+
        storage.load({
             key: 'servicos',
             id: {

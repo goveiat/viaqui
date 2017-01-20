@@ -45,7 +45,7 @@ export default class Evento extends Component {
 
     componentDidMount(){
         this.setState({
-            selecionado: this.props.servicos[0],
+            selecionado: this.props._servicos[0],
         })
     }
 
@@ -65,7 +65,6 @@ export default class Evento extends Component {
                             appRoute: 'Foto',
                             servico: this.state.selecionado,
                             cliente: this.props.cliente,
-                            aplicativo: this.props.aplicativo
                           })
                     }}>
                         <Icon name='md-arrow-forward' />
@@ -75,7 +74,7 @@ export default class Evento extends Component {
                 <Content style={cssg.content} >
                 <Card style={{ flex: 0 }}>
                     <CardItem style={cssg.tituloCardContainer}>
-                        <Thumbnail size={50} source={{uri: this.props.aplicativo.url + this.props.cliente.photo}} />
+                        <Thumbnail size={50} source={{uri: this.props._aplicativo.url + this.props.cliente.photo}} />
                         <Text style={cssg.tituloCard}>Cliente {this.props.cliente.name}</Text>
                     </CardItem>
                     <CardItem>
@@ -91,7 +90,7 @@ export default class Evento extends Component {
 
 
     exibirServicos(){
-        if(this.props.servicos.length > 0 && this.state.selecionado != null){
+        if(this.props._servicos.length > 0 && this.state.selecionado != null){
             return (
                     <Grid>
                         <Row style={cssg.formRow}  >
@@ -100,7 +99,7 @@ export default class Evento extends Component {
                                     mode="dropdown"
                                     selectedValue={this.state.selecionado}
                                     onValueChange={(item)=>this.setState({selecionado: item})}>
-                                    {this.props.servicos.map((item, k) => <Item key={k} label={item.name} value={item} />)}
+                                    {this.props._servicos.map((item, k) => <Item key={k} label={item.name} value={item} />)}
                                </Picker>
                             </Col>
                         </Row>
