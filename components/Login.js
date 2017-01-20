@@ -32,9 +32,9 @@ export default class Login extends Component {
     }
 
     render() {
-      if(this.props.getAppState('aplicativo') === null){
-          return (<Spinner style={{alignSelf: 'center'}} color="red" />);
-      }
+        if(this.props.aplicativo === null){
+            return (<Spinner style={cssg.alignCenter} {...StyleSheet.flatten(cssg.colorSpinner)} />);
+        }
         return (
             <Container>
                 <Content style={cssg.content}>
@@ -42,7 +42,7 @@ export default class Login extends Component {
                         <CardItem >
                             <Image
                                 style={[css.logo, {paddingTop: 60}]}
-                                source={{uri: this.props.getAppState('aplicativo').logo}}
+                                source={{uri: this.props.aplicativo.logo}}
                                 onLoad={(e) => this.setState({imgCompleta: true})}
                               >
                               {this.carregaImg()}
@@ -107,7 +107,7 @@ export default class Login extends Component {
        storage.load({
             key: 'credenciais',
             id: {
-              uri: this.props.getAppState('aplicativo').url + this.props.path,
+              uri: this.props.aplicativo.url + this.props.path,
               dados: {
                 password: this.state.senha,
                 username: this.state.usuario,

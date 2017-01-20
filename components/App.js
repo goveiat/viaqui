@@ -47,7 +47,7 @@ export default class App extends Component {
     }
 
     componentDidMount(){
-        this.limpaArmazenamento()
+        // this.limpaArmazenamento()
         console.log('Início')
 
         storage.load({ //Busca localmente as credenciais
@@ -110,7 +110,7 @@ export default class App extends Component {
                 ref={(ref) => this.refMenuLat = ref}
                 type="overlay"
                 content={<MenuLateral
-                  applicativo={this.state.aplicativo}
+                  aplicativo={this.state.aplicativo}
                   getNavigator={this.getNavigator.bind(this)}
                   fechaMenuLat={this.fechaMenuLat.bind(this)}
                   />}
@@ -167,16 +167,12 @@ export default class App extends Component {
         this.setState(state);
     }
 
-    getAppState(state){
-        return this.state[state];
-    }
-
     exibeView(route, navigator) {
       switch(route.appRoute){
         case 'PalavraChave':
           return (<PalavraChave
-            setAppState={this.setAppState.bind(this)}
             navigator={navigator}
+            setAppState={this.setAppState.bind(this)}
           />);
 
 
@@ -185,18 +181,19 @@ export default class App extends Component {
           return (<Login
             navigator={navigator}
             setAppState={this.setAppState.bind(this)}
-            getAppState={this.getAppState.bind(this)}
+            aplicativo={this.state.aplicativo}
             />);
 
 
 
         case 'Clientes':
           return (<Clientes
+            navigator={navigator}
             setAppState={this.setAppState.bind(this)}
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
-            navigator={navigator}
-            getAppState={this.getAppState.bind(this)}
+            aplicativo={this.state.aplicativo}
+            credenciais={this.state.credenciais}
             />);
 
 

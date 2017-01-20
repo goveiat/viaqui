@@ -60,8 +60,11 @@ export default class Clientes extends Component {
 
 
     render() {
-        return (
+        if(this.props.aplicativo === null){
+            return (<Spinner style={cssg.alignCenter} {...StyleSheet.flatten(cssg.colorSpinner)} />);
+        }
 
+        return (
             <Container>
                 <Header style={cssg.header}>
                     <Button transparent onPress={()=>this.props.openDrawer()}><Icon name='md-menu' /></Button>
