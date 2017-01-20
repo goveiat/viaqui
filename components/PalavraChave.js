@@ -62,7 +62,7 @@ export default class PalavraChave extends Component {
                         </Row>
                         <Row>
                             <Col>
-                              <Button onPress={this.buscaEmpresa.bind(this)} large block danger {...this.dadosBtn()} />
+                              <Button onPress={this._aplicativo.bind(this)} large block danger {...this.dadosBtn()} />
                             </Col>
                         </Row>
                       </Grid>
@@ -97,7 +97,7 @@ export default class PalavraChave extends Component {
       this.setState({palavraChave: txt})
     }
 
-    buscaEmpresa(){
+    _aplicativo(){
       this.setState({enviando: true});
       if(!this.valida()){
         this.setState({enviando: false});
@@ -113,10 +113,7 @@ export default class PalavraChave extends Component {
           console.log(retorno)
           switch(retorno.code){
             case 200:
-                this.props.setAppState(
-                  {_aplicativo: retorno},
-                  ()=>{this.props.navigator.replace({appRoute: 'Login'});}
-                );
+                this.props.setAppState({_aplicativo: retorno}, ()=>{this.props.navigator.replace({appRoute: 'Login'});});
                 break;
             case 404:
                 this.setState({erro: 'A Palavra Chave informada é inválida.'});

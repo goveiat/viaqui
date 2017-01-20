@@ -14,10 +14,12 @@ global.storage = new Storage({
               let { id, resolve, reject } = params;
                 Utils.post('https://www.viaqui.com.br/component/api/app/users/wsconfig/raw', id)
                 .then((retorno) => {
-                      storage.save({
+                      if(retorno.code == 200){
+                        storage.save({
                           key: 'aplicativo',
                           rawData: retorno,
-                      });
+                        });
+                      }
                       resolve && resolve(retorno);
                 })
                 .catch((error) => {
@@ -29,10 +31,12 @@ global.storage = new Storage({
                 let { id, resolve, reject } = params;
                 Utils.post(id.uri, id.dados)
                 .then((retorno) => {
-                      storage.save({
-                          key: 'credenciais',
-                          rawData: retorno,
-                      });
+                      if(retorno.code == 200){
+                        storage.save({
+                            key: 'credenciais',
+                            rawData: retorno,
+                        });
+                      }
                       resolve && resolve(retorno);
                 })
                 .catch((error) => {
@@ -44,10 +48,12 @@ global.storage = new Storage({
                 let { id, resolve, reject } = params;
                 Utils.get(id.uri, id.dados)
                 .then((retorno) => {
-                      storage.save({
-                          key: 'clientes',
-                          rawData: retorno,
-                      });
+                      if(retorno.code == 200){
+                        storage.save({
+                            key: 'clientes',
+                            rawData: retorno,
+                        });
+                      }
                       resolve && resolve(retorno);
                 })
                 .catch((error) => {
@@ -59,10 +65,12 @@ global.storage = new Storage({
                 let { id, resolve, reject } = params;
                 Utils.get(id.uri)
                 .then((retorno) => {
-                      storage.save({
-                          key: 'lojista',
-                          rawData: retorno,
-                      });
+                      if(retorno.code == 200){
+                        storage.save({
+                            key: 'lojista',
+                            rawData: retorno,
+                        });
+                      }
                       resolve && resolve(retorno);
                 })
                 .catch((error) => {
@@ -72,5 +80,3 @@ global.storage = new Storage({
           },
       }
 });
-
-

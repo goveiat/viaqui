@@ -28,6 +28,9 @@ const drawerStyles = {
   Os padrões de implementação são flexiveis.
   Optou-se por priorizar o uso básico de ES6, tal como let, const, map, spread operator, Destructuring assignment e arrow function.
   Para nomes de variáveis e funções, adota-se preferencialmente o português (exceto para get e set) e camel case.
+  Se utilizar o Inglês, manter o padrão do idioma em todas as palavras da função ou variável
+  O símbolo "_" em um state ou prop indica um dado que tembém é salvo no armazenamento.
+  ) símbolo "_" em função, indica que a função busca um dado e o salva localmente
 */
 export default class App extends Component {
 
@@ -62,7 +65,10 @@ export default class App extends Component {
             })
             .then(app => {  //Se encontrou dados do app, seta os dados e vai para a página de clientes
               console.log(app);
-              this.setAppState({_aplicativo: app, _credenciais: cred}, ()=> {this.refNavigator.replace({appRoute: 'Clientes'})})
+              this.setState({_aplicativo: app, _credenciais: cred}, ()=> {
+                this.setInitialState();
+                this.refNavigator.replace({appRoute: 'Clientes'});
+              })
             }).catch(err => { //se encontrou credenciais, mas não os dados do app, ocorreu um erro. Limpa todos os dados armazenados.
               console.warn(err)
               this.limpaArmazenamento()
@@ -78,7 +84,7 @@ export default class App extends Component {
                       })
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
                           console.log(app)
-                          this.setAppState({_aplicativo: app}, ()=> {this.refNavigator.replace({appRoute: 'Login'})})
+                          this.setState({_aplicativo: app}, ()=> {this.refNavigator.replace({appRoute: 'Login'})})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
                           console.log(err)
                           switch (err.name) {
@@ -110,6 +116,8 @@ export default class App extends Component {
                 content={<MenuLateral
                   getNavigator={this.getNavigator.bind(this)}
                   fechaMenuLat={this.fechaMenuLat.bind(this)}
+                  setAppState={this.setAppState.bind(this)}
+                  _lojista={this.state._lojista}
                   />}
                 tapToClose={true}
                 openDrawerOffset={0.2}
@@ -148,6 +156,12 @@ export default class App extends Component {
       this.setState(data, callback);
     }
 
+
+    setInitialState(){
+        this._lojista();
+    }
+
+
     limpaArmazenamento(){
         storage.remove({
           key: 'aplicativo',
@@ -178,6 +192,7 @@ export default class App extends Component {
           return (<Login
             navigator={navigator}
             setAppState={this.setAppState.bind(this)}
+            setInitialState={this.setInitialState.bind(this)}
             _aplicativo={this.state._aplicativo}
             />);
 
@@ -186,10 +201,11 @@ export default class App extends Component {
         case 'Clientes':
           return (<Clientes
             navigator={navigator}
+            setAppState={this.setAppState.bind(this)}
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
-            aplicativo={route.aplicativo}
-            credenciais={route.credenciais}
+            _aplicativo={this.state._aplicativo}
+            _credenciais={this.state._credenciais}
             />);
 
 
@@ -223,4 +239,38 @@ export default class App extends Component {
       }
 
     }
+
+    _lojista(){
+        let loj = null;
+         storage.load({
+              key: 'lojista',
+              id: {
+                uri: this.state._aplicativo.url + this.props.pathLojista + this.state._credenciais.auth,
+              },
+          })
+          .then((retorno) => {
+              switch(retorno.code){
+                case 200:
+                    loj = retorno.users[0];
+                    loj.code = retorno.code;
+                    this.setState({_lojista: loj});
+                    break;
+                case 404:
+                    this.setState({erro: 'Conteúdo não encontrado'});
+                    break;
+                case 403:
+                    this.setState({erro: 'Acesso não autorizado.'});
+                    break;
+                default:
+                    this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
+              }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    }
+}
+
+App.defaultProps = {
+  pathLojista: '/component/api/app/users/users/raw/',
 }

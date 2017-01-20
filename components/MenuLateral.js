@@ -17,21 +17,21 @@ export default class MenuLateral extends Component {
         super(props);
 
         this.state = {
-          lojista: null,
+          erro: false,
         }
     }
 
     componentDidMount(){
       console.log(this.props)
-
-      storage.load({key: 'lojista', autoSync: false,})
-      .then(ret => {this.setState({lojista: ret.user[0]})})
-      .catch(err=>{console.log(err)})
+        if(this.props._lojista == null){
+          this._lojista();
+        }
     }
 
     render() {
         return (
           <View>
+              {this.state.erro}
               {this.exibeImg()}
               {this.exibeOperador()}
               {this.exibeMenu()}
@@ -97,5 +97,4 @@ export default class MenuLateral extends Component {
 
 
 MenuLateral.defaultProps = {
-
 }

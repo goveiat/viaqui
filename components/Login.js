@@ -62,7 +62,7 @@ export default class Login extends Component {
                                 {this.exibeErro()}
                             </CardItem>
                        </Card>
-                      <Button onPress={this.autentica.bind(this)} large block danger {...this.dadosBtn()} />
+                      <Button onPress={this._credenciais.bind(this)} large block danger {...this.dadosBtn()} />
                     </Content>
                 </Container>
             );
@@ -98,7 +98,7 @@ export default class Login extends Component {
       }
     }
 
-    autentica(){
+    _credenciais(){
         this.setState({enviando: true});
         if(!this.valida()){
           this.setState({enviando: false});
@@ -119,7 +119,10 @@ export default class Login extends Component {
             this.setState({enviando: false});
             switch(retorno.code){
               case 200:
-                    this.props.navigator.replace({appRoute: 'Clientes'})
+                    this.props.setAppState({_credenciais: retorno}, ()=>{
+                      this.props.setInitialState();
+                      this.props.navigator.replace({appRoute: 'Clientes'});
+                    });
                   break;
               case 404:
                   this.setState({erro: 'Usuário e/ou senha inválidos'});

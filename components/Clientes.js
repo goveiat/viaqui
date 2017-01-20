@@ -42,37 +42,20 @@ export default class Clientes extends Component {
             filtrados: [],
             enviando: false,
             erro: false,
-            servicos: [],
-            _credenciais: null,
-            _aplicativo: null,
-            _clientes: [],
         }
     }
 
 
     componentDidMount(){
         SplashScreen.hide();
-        storage.load({key: 'aplicativo', autoSync: false,})
-        .then(app => {
-            storage.load({key: 'credenciais', autoSync: false,})
-            .then(cred => {
-              this.setState({_credenciais: cred, _aplicativo: app}, () => {
-                this.buscaClientes();
-              })
-
-            })
-            .catch(err=>{console.log(err)})
-          })
-        .catch(err=>{console.log(err)})
-
+        if(this.props._clientes.length == 0){
+          this._clientes();
+        }
     }
 
 
 
     render() {
-        if(this.state._aplicativo === null || this.state._credenciais === null){
-            return (<Spinner style={cssg.alignCenter} {...StyleSheet.flatten(cssg.colorSpinner)} />);
-        }else{
         return (
             <Container>
                 <Header style={cssg.header}>
@@ -85,12 +68,11 @@ export default class Clientes extends Component {
                 </Content>
             </Container>
         );
-        }
     }
 
     exibir(){
         let f = this.state.filtrados;
-        let url = this.state._aplicativo.url;
+        let url = this.props._aplicativo.url;
         if(f.length > 0){
             return(
                 <View>
@@ -149,7 +131,7 @@ export default class Clientes extends Component {
 
     filtrar(busca){
         let lista = [];
-        for(let cliente of this.state._clientes){
+        for(let cliente of this.props._clientes){
             if(cliente.name.toLowerCase().indexOf(busca.toLowerCase()) !== -1){
                 lista.push(cliente);
             }
@@ -170,13 +152,13 @@ export default class Clientes extends Component {
         }
     }
 
-    buscaClientes(){
+    _clientes(){
         let arr = [];
         this.setState({enviando: true});
          storage.load({
               key: 'clientes',
               id: {
-                uri: this.state._aplicativo.url + this.props.path + this.state._credenciais.auth,
+                uri: this.props._aplicativo.url + this.props.path + this.props._credenciais.auth,
                 dados: {id: -1}
               },
           })
@@ -185,9 +167,15 @@ export default class Clientes extends Component {
                 case 200:
                     this.setState({
                         enviando: false,
-                        clientes: retorno.users,
                         filtrados: retorno.users
                     })
+                    this.props.setAppState({_clientes: retorno.users});
+                    break;
+                case 404:
+                    this.setState({erro: 'Conteúdo não encontrado'});
+                    break;
+                case 403:
+                    this.setState({erro: 'Acesso não autorizado.'});
                     break;
                 default:
                     this.setState({erro: 'Ocorreu um erro inesperado. Tente novamente mais tarde.'});
@@ -203,13 +191,12 @@ export default class Clientes extends Component {
 
     buscaServicos(){
       let self = this;
-      let uri = this.state._aplicativo.url + this.props.pathServices + this.state._credenciais.auth;
+      let uri = this.props._aplicativo.url + this.props.pathServices + this.props._credenciais.auth;
       Utils.get(uri)
       .then((retorno) => {
           switch(retorno.code){
             case 200:
             case "200":
-            console.log(retorno.services)
                 self.setState({
                     servicos: retorno.services,
                 })
