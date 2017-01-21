@@ -302,7 +302,7 @@ export default class App extends Component {
                         case 200:
                             let arr = clientes.users;
                             let atual = atualizacoes.users;
-                            if('users' in atualizacoes){
+                            if(atualizacoes.users.length > 0){
                                 atual.map((item)=> {
                                   arrIds.push(item.id);
                                   objAtualizacoes[item.id] = item;
@@ -320,7 +320,7 @@ export default class App extends Component {
 
                                 this.setState({_clientes: atualizado});
                             }else{
-                              this.setState({_clientes: clientes});
+                              this.setState({_clientes: clientes.users});
                             }
 
                             break;
@@ -335,7 +335,7 @@ export default class App extends Component {
                       }
                   })
                   .catch((error) => {
-                      this.setState({_clientes: clientes});
+                      this.setState({_clientes: clientes.users});
                   });
               })
               .catch((error) => {

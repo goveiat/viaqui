@@ -23,6 +23,7 @@ import cssg from './GlobalStyle';
 import Utils from './Utils';
 import ImgDef from '../img/avatar.png';
 const Item = Picker.Item;
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 const opcoesCamera = {
     title: 'Selecionar Foto',
@@ -100,6 +101,12 @@ export default class Foto extends Component {
                         <View style={{padding: 10}}></View>
                 </Content>
             </Container>
+              <Toast
+                fadeInDuration={750}
+                fadeOutDuration={1000}
+                opacity={0.8}
+                style={{borderRadius: 30, backgroundColor: '#3B3738'}}
+                ref="toastSubmit"/>
             </Image>
         );
     }
@@ -153,6 +160,7 @@ export default class Foto extends Component {
           body: form
         })
         .then(retorno => {
+            this.refs.toastSubmit.show('Fotos Enviadas com sucesso!');
             this.props.navigator.popN(2);
         })
         .catch(erro => {
