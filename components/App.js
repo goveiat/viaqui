@@ -13,6 +13,7 @@ import MenuLateral from './MenuLateral';
 import Armazenamento from './Armazenamento';
 import Utils from './Utils';
 import {Spinner} from 'native-base';
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 
 
@@ -50,6 +51,14 @@ export default class App extends Component {
             navigator: null,
             erro: false,
         }
+    }
+
+
+    componentDidUpdate(prevProps, prevStates){
+        // if(prevStates.erro == false && this.state.erro != false){
+        //     this.refs.toastErro.show(erro);
+        //     setTimeout(()=>{this.setState({erro: false})}, 20000)
+        // }
     }
 
     componentDidMount(){
@@ -135,6 +144,12 @@ export default class App extends Component {
                   style={{ flex:1 }}
                   initialRoute={{ appRoute: 'App' }}
                   renderScene={ this.exibeView.bind(this) } />
+                  <Toast
+                    fadeInDuration={750}
+                    fadeOutDuration={1000}
+                    opacity={0.8}
+                    style={{borderRadius: 30, backgroundColor: '#3B3738'}}
+                    ref="toastErro"/>
             </Image>
           </Drawer>
           )
@@ -302,6 +317,7 @@ export default class App extends Component {
                                     key: 'horaClientes',
                                     rawData: Utils.formatDate(new Date()),
                                 });
+
                                 this.setState({_clientes: atualizado});
                             }else{
                               this.setState({_clientes: clientes});
