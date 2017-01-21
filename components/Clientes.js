@@ -52,7 +52,6 @@ export default class Clientes extends Component {
     componentWillReceiveProps(nextProps){
       if(nextProps._clientes !== null){
         this.setState({filtrados: nextProps._clientes})
-        console.log(nextProps._clientes)
       }
 
     }

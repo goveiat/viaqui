@@ -221,6 +221,7 @@ export default class App extends Component {
             servico={route.servico}
             cliente={route.cliente}
             _aplicativo={this.state._aplicativo}
+            _credenciais={this.state._credenciais}
             />);
 
 

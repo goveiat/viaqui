@@ -43,4 +43,8 @@ export default class Utils{
       return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     }
 
+    static fileName(url){
+      return url.substring(url.lastIndexOf('/')+1);
+    }
+
 }

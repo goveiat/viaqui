@@ -20,6 +20,7 @@ import {StyleSheet, View, Image, NativeModules} from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 var ImagePicker = NativeModules.ImageCropPicker;
 import cssg from './GlobalStyle';
+import Utils from './Utils';
 import ImgDef from '../img/avatar.png';
 const Item = Picker.Item;
 
@@ -50,6 +51,7 @@ export default class Foto extends Component {
             modeloSelecionado: null,
             salvando: false,
             fotos: [],
+            dadosFotos: [],
         }
 
     }
@@ -115,7 +117,7 @@ export default class Foto extends Component {
                         </CardItem>
 
                         <CardItem >
-                             <Image style={{ resizeMode: 'cover', width: null }} source={this.state.fotos[k]} />
+                             <Image style={{ resizeMode: 'cover', height: Number(item.height), width: null }} source={this.state.fotos[k]} />
                         </CardItem>
                   </Card>
                 )
@@ -133,7 +135,29 @@ export default class Foto extends Component {
 
 
     submeter(){
-      this.props.navigator.popN(2);
+        let uri = this.props._aplicativo.url + "/component/api/app/events/services/raw/" + this.props._credenciais.auth;
+        let form = new FormData();
+
+        form.append('userid', this.props.cliente.id);
+        form.append('serviceid', this.props.servico.id);
+        form.append('modelid', this.state.modeloSelecionado.id);
+        this.state.modeloSelecionado.photos.map((item, k)=>{
+            form.append('photos['+k+']', item.id);
+        })
+        this.state.dadosFotos.map((item, k)=>{
+            form.append('files['+k+']', {uri: item.path, type: item.mime, name: Utils.fileName(item.path)});
+        })
+
+        fetch(uri, {
+          method: 'POST',
+          body: form
+        })
+        .then(retorno => {
+            this.props.navigator.popN(2);
+        })
+        .catch(erro => {
+            console.log(erro)
+        })
     }
 
 
@@ -145,8 +169,10 @@ export default class Foto extends Component {
               cropping: true
             }).then(image => {
                 let fotos = [...this.state.fotos];
+                let dadosFotos = [...this.state.dadosFotos];
                 fotos[k] = {uri: image.path};
-                this.setState({fotos: fotos});
+                dadosFotos[k] = image;
+                this.setState({fotos: fotos, dadosFotos: dadosFotos});
             }).catch((err)=>console.log(err));
     }
 
@@ -157,8 +183,10 @@ export default class Foto extends Component {
               cropping: true
             }).then(image => {
                 let fotos = [...this.state.fotos];
+                let dadosFotos = [...this.state.dadosFotos];
                 fotos[k] = {uri: image.path};
-                this.setState({fotos: fotos});
+                dadosFotos[k] = image;
+                this.setState({fotos: fotos, dadosFotos: dadosFotos});
             }).catch((err)=>console.log(err));
     }
 
