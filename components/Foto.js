@@ -164,6 +164,7 @@ export default class Foto extends Component {
             this.props.navigator.popN(2);
         })
         .catch(erro => {
+            this.refs.toastSubmit.show('Ocorreu um erro!');
             console.log(erro)
         })
     }
