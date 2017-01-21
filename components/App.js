@@ -225,6 +225,8 @@ export default class App extends Component {
           return (<Conta
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
+            _lojista={this.state._lojista}
+            _aplicativo={this.state._aplicativo}
             navigator={navigator}
             />);
 

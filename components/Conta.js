@@ -33,8 +33,31 @@ export default class Conta extends Component {
                     <Title>Minha Conta</Title>
                 </Header>
 
-                <Content >
-
+                <Content style={cssg.content} >
+                    <Card>
+                        <CardItem style={cssg.tituloCardContainer}>
+                            <Thumbnail size={50} source={{uri: this.props._aplicativo.url + this.props._lojista.photo}} />
+                            <Text style={cssg.tituloCard}>{this.props._lojista.name}</Text>
+                        </CardItem>
+                        <Grid>
+                            <Row style={{padding: 15}}>
+                                <Col style={{width: 110}}><Text style={{fontWeight: 'bold'}}>Email</Text></Col>
+                                <Col><Text>{this.props._lojista.email}</Text></Col>
+                            </Row>
+                            <Row style={{padding: 15}}>
+                                <Col style={{width: 110}}><Text style={{fontWeight: 'bold'}}>Usuário</Text></Col>
+                                <Col><Text>{this.props._lojista.username}</Text></Col>
+                            </Row>
+                            <Row style={{padding: 15}}>
+                                <Col style={{width: 110}}><Text style={{fontWeight: 'bold'}}>Telefone</Text></Col>
+                                <Col><Text>{this.props._lojista.phonemobile}</Text></Col>
+                            </Row>
+                            <Row style={{padding: 15}}>
+                                <Col style={{width: 110}}><Text style={{fontWeight: 'bold'}}>Pontos</Text></Col>
+                                <Col><Text>{this.props._lojista.points}</Text></Col>
+                            </Row>
+                        </Grid>
+                    </Card>
                 </Content>
 
 
