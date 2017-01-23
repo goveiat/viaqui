@@ -53,7 +53,7 @@ export default class PalavraChave extends Component {
                                         <Text style={css.msg}>Uma palavra chave foi enviada para o seu email pessoal. Informe-a no campo abaixo para prosseguir.</Text>
                                           <InputGroup style={[css.input, this.state.erro && cssg.inputErro]}>
                                               <Icon style={this.state.erro && cssg.corErro} name='md-key' />
-                                              <Input onChangeText={this.setPalavraChave.bind(this)} placeholder='Palavra Chave'/>
+                                              <Input onSubmitEditing={this._aplicativo.bind(this)}  onChangeText={this.setPalavraChave.bind(this)} placeholder='Palavra Chave'/>
                                           </InputGroup>
                                           {this.exibeErro()}
                                   </CardItem>

@@ -160,12 +160,13 @@ export default class Foto extends Component {
           body: form
         })
         .then(retorno => {
+            console.log(retorno)
             this.refs.toastSubmit.show('Fotos Enviadas com sucesso!');
             this.props.navigator.popN(2);
         })
         .catch(erro => {
             this.refs.toastSubmit.show('Ocorreu um erro!');
-            console.log(erro)
+            console.warn(erro)
         })
     }
 

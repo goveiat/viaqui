@@ -95,7 +95,6 @@ export default class App extends Component {
                       .then(app => {  //Se encontrou dados do APP, vai para a página de login
                           this.setState({_aplicativo: app}, ()=> {this.refNavigator.replace({appRoute: 'Login'})})
                       }).catch(err => { // Se não encontrou dados do App, vai para palavra chave
-                          console.log(err)
                           switch (err.name) {
                               case 'NotFoundError':
                               case 'ExpiredError':
