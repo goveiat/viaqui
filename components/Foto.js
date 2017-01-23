@@ -78,9 +78,7 @@ export default class Foto extends Component {
                         <Icon name='md-arrow-back' />
                     </Button>
                     <Title>Publicação</Title>
-                    <Button transparent onPress={()=> this.submeter()}>
-                        <Icon name='md-checkmark' />
-                    </Button>
+                    {this.exibeBtnEnviar()}
                 </Header>
                 <Content style={cssg.content}>
                     <Card>
@@ -102,13 +100,27 @@ export default class Foto extends Component {
                 </Content>
             </Container>
               <Toast
-                fadeInDuration={750}
-                fadeOutDuration={1000}
                 opacity={0.8}
                 style={{borderRadius: 30, backgroundColor: '#3B3738'}}
                 ref="toastSubmit"/>
             </Image>
         );
+    }
+
+    exibeBtnEnviar(){
+        if(this.state.salvando){
+            return (
+                <Button transparent disabled >
+                    <Spinner style={{width: 20}} color="#fff" />
+                </Button>
+            )
+        }else{
+            return (
+                <Button transparent onPress={()=> this.submeter()}>
+                    <Icon name='md-checkmark' />
+                </Button>
+            )
+        }
     }
 
     exibirFormFotos(){
@@ -142,6 +154,8 @@ export default class Foto extends Component {
 
 
     submeter(){
+        this.setState({salvando: true});
+        this.refs.toastSubmit.show('Suas fotos estão sendo enviadas...');
         let uri = this.props._aplicativo.url + "/component/api/app/events/services/raw/" + this.props._credenciais.auth;
         let form = new FormData();
 
@@ -155,19 +169,35 @@ export default class Foto extends Component {
             form.append('files['+k+']', {uri: item.path, type: item.mime, name: Utils.fileName(item.path)});
         })
 
-        fetch(uri, {
-          method: 'POST',
-          body: form
-        })
-        .then(retorno => {
-            console.log(retorno)
-            this.refs.toastSubmit.show('Fotos Enviadas com sucesso!');
-            this.props.navigator.popN(2);
-        })
-        .catch(erro => {
-            this.refs.toastSubmit.show('Ocorreu um erro!');
-            console.warn(erro)
-        })
+        let xhr = new XMLHttpRequest();
+        let json = {};
+
+
+        xhr.addEventListener("progress", (evt) => {
+              if (xhr.lengthComputable) {
+                var percentComplete = xhr.loaded / xhr.total;
+                console.log(percentComplete)
+              } else {
+                console.log('Não da')
+              }
+        });
+
+        xhr.addEventListener("load", (evt) => {
+            this.setState({salvando: false});
+            json = JSON.parse(xhr.responseText);
+            this.refs.toastSubmit.show('As fotos foram enviadas com sucesso!');
+            // this.props.navigator.popN(2);
+            console.log(json);
+        });
+
+        xhr.addEventListener("error", (evt) => {
+            this.setState({salvando: false});
+            this.refs.toastSubmit.show('Ocorreu um erro no envio.');
+        });
+
+
+        xhr.open('POST', 'https://www.brudermusichall.com.br/_bd/teste.php');
+        xhr.send(form);
     }
 
 
