@@ -21,6 +21,7 @@ import Utils from './Utils';
 import {View, StyleSheet, Image} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
+import PopupDialog from 'react-native-popup-dialog';
 
 
 
@@ -37,6 +38,8 @@ export default class Clientes extends Component {
 
     constructor(props){
         super(props);
+
+        this.refDialog = null;
 
         this.state = {
             filtrados: [],
@@ -68,6 +71,13 @@ export default class Clientes extends Component {
 
                 <Content >
                         {this.exibir()}
+                        <PopupDialog
+                            ref={(popupDialog) => { this.refDialog = popupDialog; }}
+                        >
+                          <View>
+                            <Text>Hello</Text>
+                          </View>
+                          </PopupDialog>
                 </Content>
             </Container>
         );
@@ -87,13 +97,14 @@ export default class Clientes extends Component {
                     {this.exibeBusca()}
                     <Card style={css.card} dataArray={f}
                           renderRow={(item) =>
-                                <CardItem button onPress={() => {this.props.navigator.push({appRoute: 'Evento',cliente: item})}}>
+                                <CardItem buttononPress={() => {this.props.navigator.push({appRoute: 'Evento',cliente: item})}}>
                                     <Thumbnail style={css.avatar}  size={80} source={{uri: url+item.photo}} />
                                     <Grid>
                                         <Row><Text style={css.nome}>{item.name}</Text></Row>
                                         <Row><Text >{item.email}</Text></Row>
                                         <Row><Text style={css.nome}>Pontos: {item.points}</Text></Row>
                                     </Grid>
+                                    <Button transparent onPress={()=>{this.refDialog.openDialog()}}><Icon name='md-more' /></Button>
                                 </CardItem>
                         }>
                     </Card>
