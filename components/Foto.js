@@ -15,7 +15,6 @@ import {
     DeckSwiper,
     Text,
     Icon } from 'native-base';
-
 import {StyleSheet, View, Image, NativeModules} from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 var ImagePicker = NativeModules.ImageCropPicker;
@@ -172,16 +171,6 @@ export default class Foto extends Component {
         let xhr = new XMLHttpRequest();
         let json = {};
 
-
-        xhr.addEventListener("progress", (evt) => {
-              if (xhr.lengthComputable) {
-                var percentComplete = xhr.loaded / xhr.total;
-                console.log(percentComplete)
-              } else {
-                console.log('Não da')
-              }
-        });
-
         xhr.addEventListener("load", (evt) => {
             this.setState({salvando: false});
             json = JSON.parse(xhr.responseText);
@@ -195,8 +184,8 @@ export default class Foto extends Component {
             this.refs.toastSubmit.show('Ocorreu um erro no envio.');
         });
 
-
-        xhr.open('POST', 'https://www.brudermusichall.com.br/_bd/teste.php');
+        //teste: 'https://www.brudermusichall.com.br/_bd/teste.php'
+        xhr.open('POST', uri, true);
         xhr.send(form);
     }
 
