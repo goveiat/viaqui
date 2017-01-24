@@ -23,6 +23,7 @@ import Utils from './Utils';
 import ImgDef from '../img/avatar.png';
 const Item = Picker.Item;
 import Toast, {DURATION} from 'react-native-easy-toast'
+import FitImage from 'react-native-fit-image';
 
 const opcoesCamera = {
     title: 'Selecionar Foto',
@@ -59,10 +60,15 @@ export default class Foto extends Component {
 
     componentDidMount(){
         let fotos = [];
-        this.props.servico.models[0].photos.map((item)=>fotos.push(ImgDef))
+        let dadosFotos = [];
+        this.props.servico.models[0].photos.map((item)=>{
+            fotos.push(ImgDef);
+            dadosFotos.push(null);
+        })
         this.setState({
             modeloSelecionado: this.props.servico.models[0],
-            fotos: fotos
+            fotos: fotos,
+            dadosFotos: dadosFotos
         })
     }
 
@@ -133,12 +139,28 @@ export default class Foto extends Component {
                             <Button onPress={() => this.obterFoto(k, item)} transparent><Icon name="md-camera" /></Button>
                         </CardItem>
 
-                        <CardItem >
-                             <Image style={{ resizeMode: 'cover', height: Number(item.height), width: null }} source={this.state.fotos[k]} />
+                        <CardItem style={{padding: 0}} >
+                            {this.exibeImagem(item, k)}
                         </CardItem>
                   </Card>
                 )
             )
+        }
+    }
+
+
+
+    exibeImagem(item, k){
+        if(this.state.dadosFotos[k] !== null){
+            return (
+                <FitImage
+                  source={this.state.fotos[k]}
+                  originalWidth={Number(item.width)}
+                  originalHeight={Number(item.height)}
+                />
+            )
+        }else{
+            return (<Image style={{ resizeMode: 'cover', width: null }} source={this.state.fotos[k]} />)
         }
     }
 

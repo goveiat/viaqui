@@ -33,7 +33,7 @@ export default class Preview extends Component {
                         <Button transparent onPress={()=> this.voltar()}>
                             <Icon name='md-arrow-back' />
                         </Button>
-                        <Title>Preview</Title>
+                        <Title>Visualizar</Title>
                         <Button transparent onPress={()=> this.ok()}>
                             <Icon name='md-checkmark' />
                         </Button>
