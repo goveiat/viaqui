@@ -44,6 +44,7 @@ export default class Clientes extends Component {
         this.state = {
             filtrados: [],
             erro: false,
+            textoBusca: ''
         }
     }
 
@@ -54,9 +55,8 @@ export default class Clientes extends Component {
 
     componentWillReceiveProps(nextProps){
       if(nextProps._clientes !== null){
-        this.setState({filtrados: nextProps._clientes})
+        this.setState({filtrados: this.filtro(this.state.textoBusca, nextProps._clientes) })
       }
-
     }
 
 
@@ -141,8 +141,13 @@ export default class Clientes extends Component {
 
 
     filtrar(busca){
-        let lista = this.props._clientes.filter((cliente) => cliente.name.toLowerCase().indexOf(busca.toLowerCase()) !== -1 ? cliente : false)
-        this.setState({filtrados: lista})
+        let lista = this.filtro(busca, this.props._clientes);
+        this.setState({filtrados: lista, textoBusca: busca});
+    }
+
+
+    filtro(busca, lista){
+      return lista.filter((cliente) => cliente.name.toLowerCase().indexOf(busca.toLowerCase()) !== -1 ? cliente : false);
     }
 
 
