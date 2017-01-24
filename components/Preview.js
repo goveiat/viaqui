@@ -35,7 +35,7 @@ export default class Preview extends Component {
                         </Button>
                         <Title>Visualizar</Title>
                         <Button transparent onPress={()=> this.ok()}>
-                            <Icon name='md-checkmark' />
+                            <Icon name='md-home' />
                         </Button>
                     </Header>
                     <Content style={cssg.content}>

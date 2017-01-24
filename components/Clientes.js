@@ -101,7 +101,6 @@ export default class Clientes extends Component {
                                         <Row><Text >{item.email}</Text></Row>
                                         <Row><Text style={css.nome}>Pontos: {item.points}</Text></Row>
                                     </Grid>
-                                    <Button transparent onPress={()=>{this.refDialog.openDialog()}}><Icon name='md-more' /></Button>
                                 </CardItem>
                         }>
                     </Card>
