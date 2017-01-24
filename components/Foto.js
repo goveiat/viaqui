@@ -81,8 +81,7 @@ export default class Foto extends Component {
                 </Header>
                 <Content style={cssg.content}>
                     <Card>
-                        <CardItem style={cssg.tituloCardContainer}>
-                            <Thumbnail source={require('../img/avatar-mini.png')} />
+                        <CardItem >
                             <Text style={cssg.tituloCard}>Modelo da Publicação</Text>
                         </CardItem>
                         <CardItem>
@@ -175,12 +174,18 @@ export default class Foto extends Component {
             this.setState({salvando: false});
             json = JSON.parse(xhr.responseText);
             this.refs.toastSubmit.show('As fotos foram enviadas com sucesso!');
-            // this.props.navigator.popN(2);
+            this.props.navigator.push({
+                appRoute: 'Preview',
+                cliente: this.props.cliente,
+                preview: json.card_image,
+                servico: this.props.servico,
+              })
             console.log(json);
         });
 
         xhr.addEventListener("error", (evt) => {
             this.setState({salvando: false});
+            console.log(xhr.responseText);
             this.refs.toastSubmit.show('Ocorreu um erro no envio.');
         });
 

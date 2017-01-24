@@ -22,7 +22,6 @@ export default class Conta extends Component {
     }
 
     componentDidMount(){
-      console.log(this.props)
     }
 
     render() {

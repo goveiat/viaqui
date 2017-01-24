@@ -6,6 +6,7 @@ import PalavraChave from './PalavraChave';
 import Login from './Login';
 import Foto from './Foto';
 import Conta from './Conta';
+import Preview from './Preview';
 import SplashScreen from 'react-native-splash-screen';
 import cssg from './GlobalStyle';
 import Drawer from 'react-native-drawer'
@@ -32,7 +33,7 @@ const drawerStyles = {
   Para nomes de variáveis e funções, adota-se preferencialmente o português (exceto para get e set) e camel case.
   Se utilizar o Inglês, manter o padrão do idioma em todas as palavras da função ou variável
   O símbolo "_" em um state ou prop indica um dado que tembém é salvo no armazenamento.
-  ) símbolo "_" em função, indica que a função busca um dado e o salva localmente
+  O símbolo "_" em função, indica que a função busca um dado e o salva localmente
 */
 export default class App extends Component {
 
@@ -246,6 +247,17 @@ export default class App extends Component {
           return (<Evento
             navigator={navigator}
             cliente={route.cliente}
+            _aplicativo={this.state._aplicativo}
+            _servicos={this.state._servicos}
+            />);
+
+
+        case 'Preview':
+          return (<Preview
+            navigator={navigator}
+            cliente={route.cliente}
+            preview={route.preview}
+            servico={route.servico}
             _aplicativo={this.state._aplicativo}
             _servicos={this.state._servicos}
             />);
