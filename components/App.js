@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Navigator, Image, View} from 'react-native';
+import {Navigator, Image, View, StatusBar} from 'react-native';
 import Clientes from './Clientes';
 import Evento from './Evento';
 import PalavraChave from './PalavraChave';
@@ -62,8 +62,11 @@ export default class App extends Component {
         // }
     }
 
+
     componentDidMount(){
         // this.limpaArmazenamento()
+
+        StatusBar.setBackgroundColor('#be2906')
         this.setState({navigator: this.refNavigator});
 
         storage.load({ //Busca localmente as credenciais
@@ -126,6 +129,7 @@ export default class App extends Component {
                   navigator={this.state.navigator}
                   fechaMenuLat={this.fechaMenuLat.bind(this)}
                   setAppState={this.setAppState.bind(this)}
+                  sair={this.sair.bind(this)}
                   _lojista={this.state._lojista}
                   _aplicativo={this.state._aplicativo}
                   />}
@@ -185,6 +189,17 @@ export default class App extends Component {
         storage.remove({key: 'servicos'});
         storage.remove({key: 'horaClientes'});
         storage.clearMap();
+    }
+
+    sair(){
+        storage.remove({key: 'credenciais'});
+        storage.remove({key: 'lojista'});
+        storage.remove({key: 'clientes'});
+        storage.remove({key: 'servicos'});
+        storage.remove({key: 'horaClientes'});
+        storage.clearMap();
+        this.fechaMenuLat();
+        this.refNavigator.resetTo({appRoute: 'Login'});
     }
 
 

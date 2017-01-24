@@ -27,7 +27,7 @@ export default class MenuLateral extends Component {
 
     render() {
         return (
-          <View>
+          <View style={{flex: 1}}>
               {this.exibeImg()}
               {this.exibeLojista()}
               {this.exibeMenu()}
@@ -78,6 +78,12 @@ export default class MenuLateral extends Component {
                 }} iconLeft>
                     <Icon name="md-key" style={cssg.icon} />
                     <Text>Conta</Text>
+                </ListItem>
+                <ListItem button onPress={() => {
+                  this.props.sair();
+                }} iconLeft>
+                    <Icon name="md-arrow-round-back" style={cssg.icon} />
+                    <Text>Sair</Text>
                 </ListItem>
             </List>
         )

@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     tituloCardContainer: { alignItems: 'center' },
     alignCenter: {alignSelf: 'center'},
     colorSpinner: {color: '#ff9900'}
-
 });
 
 module.exports = styles
