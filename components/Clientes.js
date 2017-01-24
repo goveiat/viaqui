@@ -68,16 +68,13 @@ export default class Clientes extends Component {
                     <Button transparent onPress={()=>this.props.openDrawer()}><Icon name='md-menu' /></Button>
                     <Title>Clientes</Title>
                 </Header>
-
+                        <PopupDialog ref={(popupDialog) => { this.refDialog = popupDialog; }}>
+                            <View>
+                              <Text>Hello</Text>
+                            </View>
+                          </PopupDialog>
                 <Content >
                         {this.exibir()}
-                        <PopupDialog
-                            ref={(popupDialog) => { this.refDialog = popupDialog; }}
-                        >
-                          <View>
-                            <Text>Hello</Text>
-                          </View>
-                          </PopupDialog>
                 </Content>
             </Container>
         );
@@ -97,7 +94,7 @@ export default class Clientes extends Component {
                     {this.exibeBusca()}
                     <Card style={css.card} dataArray={f}
                           renderRow={(item) =>
-                                <CardItem buttononPress={() => {this.props.navigator.push({appRoute: 'Evento',cliente: item})}}>
+                                <CardItem button onPress={() => {this.props.navigator.push({appRoute: 'Evento',cliente: item})}}>
                                     <Thumbnail style={css.avatar}  size={80} source={{uri: url+item.photo}} />
                                     <Grid>
                                         <Row><Text style={css.nome}>{item.name}</Text></Row>
