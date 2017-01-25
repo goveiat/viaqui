@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Navigator, Image, View, StatusBar} from 'react-native';
+import {Navigator, Image, View, StatusBar, BackAndroid} from 'react-native';
 import Clientes from './Clientes';
 import Evento from './Evento';
 import PalavraChave from './PalavraChave';
@@ -68,6 +68,14 @@ export default class App extends Component {
 
         StatusBar.setBackgroundColor('#be2906')
         this.setState({navigator: this.refNavigator});
+
+        BackAndroid.addEventListener('hardwareBackPress', () => {
+            if (this.refNavigator && this.refNavigator.getCurrentRoutes().length > 1) {
+                this.refNavigator.pop();
+                return true;
+            }
+            return false;
+        });
 
         storage.load({ //Busca localmente as credenciais
             key: 'credenciais',
