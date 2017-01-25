@@ -56,7 +56,7 @@ export default class Login extends Component {
                                 <Text style={cssg.titulo}>Informe suas credenciais nos campos abaixo:</Text>
                                 <InputGroup style={[css.marginInput, this.state.erro && cssg.inputErro]}>
                                     <Icon style={this.state.erro && cssg.corErro} name="md-person" />
-                                    <Input autoFocus={true}   onSubmitEditing={() => {console.log(this.refSenha._textInput.focus())}} onChangeText={(txt) => this.setState({usuario: txt})} placeholder="Usuário" />
+                                    <Input autoFocus={true} blurOnSubmit={false}  onSubmitEditing={() => {console.log(this.refSenha._textInput.focus())}} onChangeText={(txt) => this.setState({usuario: txt})} placeholder="Usuário" />
                                 </InputGroup>
                                 <InputGroup style={[css.marginInput, this.state.erro && cssg.inputErro]}>
                                     <Icon style={this.state.erro && cssg.corErro} name="md-unlock" />
