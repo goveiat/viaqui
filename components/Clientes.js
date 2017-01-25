@@ -44,13 +44,16 @@ export default class Clientes extends Component {
         this.state = {
             filtrados: [],
             erro: false,
-            textoBusca: ''
+            textoBusca: '',
+            demora: false,
         }
     }
 
 
     componentDidMount(){
         SplashScreen.hide();
+
+        setTimeout(() => {this.setState({demora: true})}, 3000);
     }
 
     componentWillReceiveProps(nextProps){
@@ -85,8 +88,18 @@ export default class Clientes extends Component {
         let url = this.props._aplicativo.url;
 
         if(this.props._clientes === null){
-            return <Spinner style={{alignSelf: 'center'}} color="#ff9900" />
+            if(!this.state.demora){
+              return (<Spinner style={{alignSelf: 'center'}} color="#ff9900" />);
+            }else{
+              return (
+                  <View>
+                      <Spinner style={{alignSelf: 'center'}} color="#ff9900" />
+                      <Text style={{color: '#fff', textAlign: 'center'}}>Está demorando mais do que o esperado...</Text>
+                  </View>
+              );
+            }
         }
+
 
         if(f.length > 0){
             return(
