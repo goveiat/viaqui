@@ -105,8 +105,9 @@ export default class Foto extends Component {
             </Container>
               <Toast
                 opacity={0.8}
-                style={{borderRadius: 30, backgroundColor: '#3B3738'}}
-                ref="toastSubmit"/>
+                textStyle={{textAlign: 'center', color: 'white'}}
+                style={{borderRadius: 30, backgroundColor: '#3B3738', marginLeft: 10, marginRight: 10}}
+                ref="toastFotos"/>
             </Image>
         );
     }
@@ -172,10 +173,24 @@ export default class Foto extends Component {
         this.props.navigator.pop();
     }
 
+    valida(){
+        if(this.state.dadosFotos.every((e) => e != null )){
+            return true;
+        }else{
+            this.refs.toastFotos.show('Você não selecionou todas as fotos necessárias para a publicação', DURATION.LENGTH_LONG);
+            return false;
+        }
+    }
+
 
     submeter(){
+
+        if(!this.valida()){
+            return false;
+        }
+
         this.setState({salvando: true});
-        this.refs.toastSubmit.show('Suas fotos estão sendo enviadas...');
+        this.refs.toastFotos.show('Suas fotos estão sendo enviadas...');
         let uri = this.props._aplicativo.url + "/component/api/app/events/services/raw/" + this.props._credenciais.auth;
         let form = new FormData();
 
@@ -195,7 +210,6 @@ export default class Foto extends Component {
         xhr.addEventListener("load", (evt) => {
             this.setState({salvando: false});
             json = JSON.parse(xhr.responseText);
-            this.refs.toastSubmit.show('As fotos foram enviadas com sucesso!');
             this.props.navigator.push({
                 appRoute: 'Preview',
                 cliente: this.props.cliente,
@@ -208,7 +222,7 @@ export default class Foto extends Component {
         xhr.addEventListener("error", (evt) => {
             this.setState({salvando: false});
             console.log(xhr.responseText);
-            this.refs.toastSubmit.show('Ocorreu um erro no envio.');
+            this.refs.toastFotos.show('Ocorreu um erro no envio.');
         });
 
         //teste: 'https://www.brudermusichall.com.br/_bd/teste.php'
