@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
     tituloCard: {marginLeft: 10, fontSize: 18},
     tituloCardContainer: { alignItems: 'center' },
     alignCenter: {alignSelf: 'center'},
-    colorSpinner: {color: '#ff9900'}
+    colorSpinner: {color: '#ff9900'},
+    check: {fontSize: 30, color: '#d54f16', marginRight: 10}
 });
 
 module.exports = styles
