@@ -21,8 +21,7 @@ export default class Preview extends Component {
         }
     }
 
-    componentDidUpdate(){
-
+    componentDidMount(){
     }
 
     render() {

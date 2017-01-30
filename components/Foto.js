@@ -215,7 +215,10 @@ export default class Foto extends Component {
                 cliente: this.props.cliente,
                 preview: json.card_image,
                 servico: this.props.servico,
-              })
+              });
+            ImagePicker.clean().catch(e => {
+              console.log(e);
+            });
             console.log(json);
         });
 
@@ -243,7 +246,10 @@ export default class Foto extends Component {
                 fotos[k] = {uri: image.path};
                 dadosFotos[k] = image;
                 this.setState({fotos: fotos, dadosFotos: dadosFotos});
-            }).catch((err)=>console.log(err));
+            }).catch((err)=>{
+                this.refs.toastFotos.show('Não foi possível selecionar uma foto da galeria', DURATION.LENGTH_LONG);
+                console.log(err);
+            });
     }
 
     obterFoto(k, item){
@@ -257,7 +263,10 @@ export default class Foto extends Component {
                 fotos[k] = {uri: image.path};
                 dadosFotos[k] = image;
                 this.setState({fotos: fotos, dadosFotos: dadosFotos});
-            }).catch((err)=>console.log(err));
+            }).catch((err)=>{
+                this.refs.toastFotos.show('Não foi possível obter uma nova foto             ', DURATION.LENGTH_LONG);
+                console.log(err);
+            });
     }
 
 }
