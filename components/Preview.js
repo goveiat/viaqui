@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, Image, View} from 'react-native';
-import {Header, Title, Spinner, Text, Container, Content, Card, CardItem, Button, Icon, List, ListItem, InputGroup, Input, Thumbnail} from 'native-base';
+import {CheckBox, Header, Title, Spinner, Text, Container, Content, Card, CardItem, Button, Icon, List, ListItem, InputGroup, Input, Thumbnail} from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import FitImage from 'react-native-fit-image';
 import Utils from './Utils';
@@ -32,7 +32,7 @@ export default class Preview extends Component {
                         <Button transparent onPress={()=> this.voltar()}>
                             <Icon name='md-arrow-back' />
                         </Button>
-                        <Title>Visualizar</Title>
+                        <Title>Publicação</Title>
                         <Button transparent onPress={()=> this.ok()}>
                             <Icon name='md-home' />
                         </Button>
@@ -55,6 +55,27 @@ export default class Preview extends Component {
                                     <Icon name="md-heart" style={{ color: '#ED4A6A' }} />
                                     <Text>{this.props.servico.name}</Text>
                                 </CardItem>
+                          </Card>
+
+                          <Card>
+                                <CardItem  style={cssg.tituloCardContainer}>
+                                    <Thumbnail size={30} source={{uri: this.props._aplicativo.url + this.props.cliente.photo}} />
+                                    <Text style={cssg.tituloCard}>Publicar agora mesmo</Text>
+                                </CardItem>
+                              <CardItem cardBody>
+                                    <List>
+                                        <ListItem>
+                                            <CheckBox checked={true}  />
+                                            <Text>Publicar na Timeline do Cliente</Text>
+                                        </ListItem>
+                                        <ListItem>
+                                            <CheckBox checked={false} />
+                                            <Text>Publicar na Fanpage</Text>
+                                        </ListItem>
+                                    </List>
+
+
+                              </CardItem>
                           </Card>
                     </Content>
                 </Container>

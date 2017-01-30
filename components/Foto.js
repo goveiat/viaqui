@@ -82,7 +82,7 @@ export default class Foto extends Component {
                     <Button transparent onPress={()=> this.voltar()}>
                         <Icon name='md-arrow-back' />
                     </Button>
-                    <Title>Publicação</Title>
+                    <Title>Fotos</Title>
                     {this.exibeBtnEnviar()}
                 </Header>
                 <Content style={cssg.content}>
