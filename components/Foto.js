@@ -171,7 +171,7 @@ export default class Foto extends Component {
         if(this.state.dadosFotos.every((e) => e != null )){
             return true;
         }else{
-            this.props.toast('Você não selecionou todas as fotos necessárias para a publicação', 2000);
+            this.props.toast('Você não adicionou todas as fotos necessárias para a publicação', 2000);
             return false;
         }
     }
