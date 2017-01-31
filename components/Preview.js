@@ -24,7 +24,7 @@ export default class Preview extends Component {
     }
 
     componentDidMount(){
-        this.refs.toast.show('Imagem salva com sucesso!', DURATION.LENGTH_LONG);
+
     }
 
     render() {
@@ -92,7 +92,7 @@ export default class Preview extends Component {
         if(this.state.isTimeline || this.state.isFanPage){
             return true;
         }else{
-            this.refs.toastTop.show('Selecione uma opção para a publicação', DURATION.LENGTH_LONG);
+            this.props.toast('Selecione uma opção para a publicação', 2000, 'top');
             return false;
         }
     }
@@ -117,16 +117,17 @@ export default class Preview extends Component {
             console.log(retorno);
             switch(retorno.code){
               case 200:
+                    this.props.toast('Imagem publicada com sucesso!', 2000);
                     this.ok();
                   break;
               case 404:
-                  this.refs.toastTop.show('Usuário e/ou senha inválidos');
+                  this.props.toast('Usuário e/ou senha inválidos');
                   break;
               case 403:
-                  this.refs.toastTop.show('Acesso não autorizado.');
+                  this.props.toast('Acesso não autorizado.');
                   break;
               default:
-                  this.refs.toastTop.show('Ocorreu um erro inesperado. Tente novamente mais tarde.');
+                  this.props.toast('Ocorreu um erro inesperado. Tente novamente mais tarde.');
             }
         })
         .catch((error) => {

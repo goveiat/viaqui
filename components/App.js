@@ -14,7 +14,7 @@ import MenuLateral from './MenuLateral';
 import Armazenamento from './Armazenamento';
 import Utils from './Utils';
 import {Spinner} from 'native-base';
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast'
 
 
 
@@ -164,6 +164,8 @@ export default class App extends Component {
                     style={{borderRadius: 30, backgroundColor: '#3B3738', marginLeft: 10, marginRight: 10}}
                     ref="toast"/>
                   <Toast
+                    position="top"
+                    positionValue={70}
                     fadeInDuration={750}
                     fadeOutDuration={1000}
                     opacity={0.8}
@@ -265,6 +267,7 @@ export default class App extends Component {
         case 'Foto':
           return (<Foto
             navigator={navigator}
+            toast={this.toast.bind(this)}
             servico={route.servico}
             cliente={route.cliente}
             _aplicativo={this.state._aplicativo}
@@ -285,6 +288,7 @@ export default class App extends Component {
         case 'Preview':
           return (<Preview
             navigator={navigator}
+            toast={this.toast.bind(this)}
             cliente={route.cliente}
             preview={route.preview}
             servico={route.servico}
@@ -450,6 +454,16 @@ export default class App extends Component {
                     console.warn(error);
                 });
           });
+    }
+
+
+    toast(msg,duracao = 1000, position = 'bottom'){
+      if(position == 'bottom'){
+        this.refs.toast.show(msg, duracao)
+      }else{
+        this.refs.toastTop.show(msg, duracao)
+      }
+
     }
 
 }
