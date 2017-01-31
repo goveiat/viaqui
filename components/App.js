@@ -57,7 +57,7 @@ export default class App extends Component {
 
     componentDidUpdate(prevProps, prevStates){
         // if(prevStates.erro == false && this.state.erro != false){
-        //     this.refs.toastErro.show(erro);
+        //     this.refs.toast.show(erro);
         //     setTimeout(()=>{this.setState({erro: false})}, 20000)
         // }
     }
@@ -160,8 +160,16 @@ export default class App extends Component {
                     fadeInDuration={750}
                     fadeOutDuration={1000}
                     opacity={0.8}
-                    style={{borderRadius: 30, backgroundColor: '#3B3738'}}
-                    ref="toastErro"/>
+                    textStyle={{textAlign: 'center', color: 'white'}}
+                    style={{borderRadius: 30, backgroundColor: '#3B3738', marginLeft: 10, marginRight: 10}}
+                    ref="toast"/>
+                  <Toast
+                    fadeInDuration={750}
+                    fadeOutDuration={1000}
+                    opacity={0.8}
+                    textStyle={{textAlign: 'center', color: 'white'}}
+                    style={{borderRadius: 30, backgroundColor: '#3B3738', marginLeft: 10, marginRight: 10}}
+                    ref="toastTop"/>
             </Image>
           </Drawer>
           )

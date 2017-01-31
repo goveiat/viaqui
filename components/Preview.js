@@ -5,7 +5,6 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import FitImage from 'react-native-fit-image';
 import Utils from './Utils';
 import cssg from './GlobalStyle';
-import Toast, {DURATION} from 'react-native-easy-toast'
 
 const css = StyleSheet.create({
 
@@ -25,6 +24,7 @@ export default class Preview extends Component {
     }
 
     componentDidMount(){
+        this.refs.toast.show('Imagem salva com sucesso!', DURATION.LENGTH_LONG);
     }
 
     render() {
@@ -84,13 +84,6 @@ export default class Preview extends Component {
                           <Button onPress={() => {this.publicar()}} block danger large style={{marginBottom: 20}}>Publicar</Button>
                     </Content>
                 </Container>
-              <Toast
-              position="top"
-                positionValue={70}
-                opacity={0.8}
-                textStyle={{textAlign: 'center', color: 'white'}}
-                style={{borderRadius: 30, backgroundColor: '#3B3738', marginLeft: 10, marginRight: 10}}
-                ref="toastPreview"/>
             </Image>
         );
     }
@@ -99,7 +92,7 @@ export default class Preview extends Component {
         if(this.state.isTimeline || this.state.isFanPage){
             return true;
         }else{
-            this.refs.toastPreview.show('Selecione uma opção para a publicação', DURATION.LENGTH_LONG);
+            this.refs.toastTop.show('Selecione uma opção para a publicação', DURATION.LENGTH_LONG);
             return false;
         }
     }
@@ -127,13 +120,13 @@ export default class Preview extends Component {
                     this.ok();
                   break;
               case 404:
-                  this.refs.toastPreview.show('Usuário e/ou senha inválidos');
+                  this.refs.toastTop.show('Usuário e/ou senha inválidos');
                   break;
               case 403:
-                  this.refs.toastPreview.show('Acesso não autorizado.');
+                  this.refs.toastTop.show('Acesso não autorizado.');
                   break;
               default:
-                  this.refs.toastPreview.show('Ocorreu um erro inesperado. Tente novamente mais tarde.');
+                  this.refs.toastTop.show('Ocorreu um erro inesperado. Tente novamente mais tarde.');
             }
         })
         .catch((error) => {

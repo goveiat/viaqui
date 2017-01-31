@@ -22,7 +22,6 @@ import cssg from './GlobalStyle';
 import Utils from './Utils';
 import ImgDef from '../img/avatar.png';
 const Item = Picker.Item;
-import Toast, {DURATION} from 'react-native-easy-toast'
 import FitImage from 'react-native-fit-image';
 
 const opcoesCamera = {
@@ -103,11 +102,6 @@ export default class Foto extends Component {
                         <View style={{padding: 10}}></View>
                 </Content>
             </Container>
-              <Toast
-                opacity={0.8}
-                textStyle={{textAlign: 'center', color: 'white'}}
-                style={{borderRadius: 30, backgroundColor: '#3B3738', marginLeft: 10, marginRight: 10}}
-                ref="toastFotos"/>
             </Image>
         );
     }
@@ -177,7 +171,7 @@ export default class Foto extends Component {
         if(this.state.dadosFotos.every((e) => e != null )){
             return true;
         }else{
-            this.refs.toastFotos.show('Você não selecionou todas as fotos necessárias para a publicação', DURATION.LENGTH_LONG);
+            this.refs.toast.show('Você não selecionou todas as fotos necessárias para a publicação', DURATION.LENGTH_LONG);
             return false;
         }
     }
@@ -190,7 +184,7 @@ export default class Foto extends Component {
         }
 
         this.setState({salvando: true});
-        this.refs.toastFotos.show('Suas fotos estão sendo enviadas...');
+        this.refs.toast.show('Suas fotos estão sendo enviadas...');
         let uri = this.props._aplicativo.url + "/component/api/app/events/services/raw/" + this.props._credenciais.auth;
         let form = new FormData();
 
@@ -211,7 +205,7 @@ export default class Foto extends Component {
             this.setState({salvando: false});
             json = JSON.parse(xhr.responseText);
             if(json.card_image == "" && false){
-                this.refs.toastFotos.show('Não foi possível gerar a imagem.');
+                this.refs.toast.show('Não foi possível gerar a imagem.');
             }else{
                 this.props.navigator.push({
                     appRoute: 'Preview',
@@ -232,7 +226,7 @@ export default class Foto extends Component {
         xhr.addEventListener("error", (evt) => {
             this.setState({salvando: false});
             console.log(xhr.responseText);
-            this.refs.toastFotos.show('Ocorreu um erro no envio.');
+            this.refs.toast.show('Ocorreu um erro no envio.');
         });
 
         //teste: 'https://www.brudermusichall.com.br/_bd/teste.php'
@@ -254,7 +248,7 @@ export default class Foto extends Component {
                 dadosFotos[k] = image;
                 this.setState({fotos: fotos, dadosFotos: dadosFotos});
             }).catch((err)=>{
-                this.refs.toastFotos.show('Não foi possível selecionar uma foto da galeria', DURATION.LENGTH_LONG);
+                this.refs.toast.show('Não foi possível selecionar uma foto da galeria', DURATION.LENGTH_LONG);
                 console.log(err);
             });
     }
@@ -271,7 +265,7 @@ export default class Foto extends Component {
                 dadosFotos[k] = image;
                 this.setState({fotos: fotos, dadosFotos: dadosFotos});
             }).catch((err)=>{
-                this.refs.toastFotos.show('Não foi possível obter uma nova foto             ', DURATION.LENGTH_LONG);
+                this.refs.toast.show('Não foi possível obter uma nova foto             ', DURATION.LENGTH_LONG);
                 console.log(err);
             });
     }
