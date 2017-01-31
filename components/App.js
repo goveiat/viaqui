@@ -238,7 +238,6 @@ export default class App extends Component {
             openDrawer={this.abreMenuLat.bind(this)}
             closeDrawer={this.fechaMenuLat.bind(this)}
             _aplicativo={this.state._aplicativo}
-            _credenciais={this.state._credenciais}
             _clientes={this.state._clientes}
             />);
 
@@ -281,6 +280,9 @@ export default class App extends Component {
             cliente={route.cliente}
             preview={route.preview}
             servico={route.servico}
+            idEvento={route.idEvento}
+            modelo={route.modelo}
+            _credenciais={this.state._credenciais}
             _aplicativo={this.state._aplicativo}
             _servicos={this.state._servicos}
             />);

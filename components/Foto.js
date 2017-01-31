@@ -210,16 +210,23 @@ export default class Foto extends Component {
         xhr.addEventListener("load", (evt) => {
             this.setState({salvando: false});
             json = JSON.parse(xhr.responseText);
-            this.props.navigator.push({
-                appRoute: 'Preview',
-                cliente: this.props.cliente,
-                preview: json.card_image,
-                servico: this.props.servico,
-              });
-            ImagePicker.clean().catch(e => {
-              console.log(e);
-            });
-            console.log(json);
+            if(json.card_image == "" && false){
+                this.refs.toastFotos.show('Não foi possível gerar a imagem.');
+            }else{
+                this.props.navigator.push({
+                    appRoute: 'Preview',
+                    cliente: this.props.cliente,
+                    preview: json.card_image,
+                    servico: this.props.servico,
+                    modelo: this.state.modeloSelecionado,
+                    idEvento: json.event_id
+                  });
+                ImagePicker.clean().catch(e => {
+                  console.log(e);
+                });
+                console.log(json);
+            }
+
         });
 
         xhr.addEventListener("error", (evt) => {

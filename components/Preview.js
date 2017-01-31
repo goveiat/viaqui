@@ -61,8 +61,7 @@ export default class Preview extends Component {
                           </Card>
 
                           <Card style={{marginBottom: 10}}>
-                                <CardItem  style={cssg.tituloCardContainer}>
-                                    <Thumbnail size={30} source={{uri: this.props._aplicativo.url + this.props.cliente.photo}} />
+                                <CardItem>
                                     <Text style={cssg.tituloCard}>Publicar agora mesmo</Text>
                                 </CardItem>
                               <CardItem >
@@ -110,6 +109,36 @@ export default class Preview extends Component {
         if(!this.valida()){
             return false;
         }
+
+        let uri = this.props._aplicativo.url + this.props.path + this.props._credenciais.auth;
+        let dados = {
+            userid: this.props.cliente.id,
+            eventid: this.props.idEvento,
+            modelid: this.props.modelo.id,
+            facebook_fanpage: + this.state.isFanPage,
+            facebook_userprofile: + this.state.isTimeline,
+        }
+
+        Utils.post(uri, dados)
+        .then((retorno) => {
+            console.log(retorno);
+            switch(retorno.code){
+              case 200:
+                    this.ok();
+                  break;
+              case 404:
+                  this.refs.toastPreview.show('Usuário e/ou senha inválidos');
+                  break;
+              case 403:
+                  this.refs.toastPreview.show('Acesso não autorizado.');
+                  break;
+              default:
+                  this.refs.toastPreview.show('Ocorreu um erro inesperado. Tente novamente mais tarde.');
+            }
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
     }
 
     checkBox(isCheck){
@@ -137,5 +166,5 @@ export default class Preview extends Component {
 
 
 Preview.defaultProps = {
-
+    path: '/component/api/app/socialpost/socialpost/raw/'
 }
